@@ -1,9 +1,10 @@
-
 import { useState } from "react";
 import { SearchInput } from "@/components/SearchInput";
 import { FilterSection } from "@/components/FilterSection";
 import { ModelCard } from "@/components/ModelCard";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Eye, Download } from "lucide-react";
 
 // Mock data for demonstration
 const mockModels = [
