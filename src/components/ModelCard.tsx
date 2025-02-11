@@ -10,6 +10,7 @@ interface ModelCardProps {
   fileFormats: string[];
   downloadUrl: string;
   viewUrl: string;
+  onClick?: () => void;
 }
 
 export const ModelCard = ({
@@ -19,9 +20,13 @@ export const ModelCard = ({
   fileFormats,
   downloadUrl,
   viewUrl,
+  onClick,
 }: ModelCardProps) => {
   return (
-    <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl bg-white/80 dark:bg-black/80 backdrop-blur-sm border border-gray-200 dark:border-gray-800">
+    <Card 
+      className="overflow-hidden group transition-all duration-300 hover:shadow-xl bg-white/80 dark:bg-black/80 backdrop-blur-sm border border-gray-200 dark:border-gray-800 cursor-pointer"
+      onClick={onClick}
+    >
       <div className="aspect-square overflow-hidden">
         <img
           src={imageUrl}
@@ -48,6 +53,7 @@ export const ModelCard = ({
           <a
             href={viewUrl}
             className="inline-flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            onClick={(e) => e.stopPropagation()}
           >
             <Eye className="w-4 h-4" />
             View
@@ -55,6 +61,7 @@ export const ModelCard = ({
           <a
             href={downloadUrl}
             className="inline-flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            onClick={(e) => e.stopPropagation()}
           >
             <Download className="w-4 h-4" />
             Download
