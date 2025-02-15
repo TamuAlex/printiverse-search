@@ -214,20 +214,13 @@ const Index = () => {
                     ))}
                   </div>
 
-                  <div className="flex justify-end gap-4 pt-4">
+                  <div className="flex justify-center pt-6">
                     <a
                       href={selectedModel.url}
-                      className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline"
+                      className="inline-flex items-center gap-2 px-6 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
                     >
-                      <Eye className="w-4 h-4" />
-                      View Model
-                    </a>
-                    <a
-                      href={selectedModel.url}
-                      className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline"
-                    >
-                      <Download className="w-4 h-4" />
-                      Download
+                      <Download className="w-5 h-5" />
+                      Download Model
                     </a>
                   </div>
                 </div>
