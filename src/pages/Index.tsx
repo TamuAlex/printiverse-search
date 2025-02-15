@@ -123,7 +123,7 @@ const Index = () => {
           <img 
             src="/lovable-uploads/0d84b7f9-8624-4a6c-ac49-a9e8b0d0d904.png" 
             alt="Modelarium Logo" 
-            className="h-16 mx-auto mb-8"
+            className="h-24 mx-auto mb-8"
           />
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Find the perfect 3D printable model for your next project
