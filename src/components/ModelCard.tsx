@@ -1,7 +1,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, Eye } from "lucide-react";
+import { Download, Eye, Heart, BookmarkCheck } from "lucide-react";
 
 interface ModelCardProps {
   title: string;
@@ -10,6 +10,8 @@ interface ModelCardProps {
   fileFormats: string[];
   downloadUrl: string;
   viewUrl: string;
+  likeCount?: number;
+  collectCount?: number;
   onClick?: () => void;
 }
 
@@ -20,6 +22,8 @@ export const ModelCard = ({
   fileFormats,
   downloadUrl,
   viewUrl,
+  likeCount,
+  collectCount,
   onClick,
 }: ModelCardProps) => {
   return (
@@ -50,14 +54,16 @@ export const ModelCard = ({
           ))}
         </div>
         <div className="flex justify-between items-center pt-2">
-          <a
-            href={viewUrl}
-            className="inline-flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Eye className="w-4 h-4" />
-            View
-          </a>
+          <div className="flex gap-3 text-sm text-gray-600 dark:text-gray-400">
+            <span className="flex items-center gap-1">
+              <Heart className="w-4 h-4" />
+              {likeCount || 0}
+            </span>
+            <span className="flex items-center gap-1">
+              <BookmarkCheck className="w-4 h-4" />
+              {collectCount || 0}
+            </span>
+          </div>
           <a
             href={downloadUrl}
             className="inline-flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"

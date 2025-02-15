@@ -144,6 +144,8 @@ const Index = () => {
               fileFormats={[]}
               downloadUrl={model.url}
               viewUrl={model.url}
+              likeCount={model.like_count}
+              collectCount={model.collect_count}
               onClick={() => setSelectedModel(model)}
             />
           ))}
