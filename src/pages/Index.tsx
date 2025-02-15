@@ -120,9 +120,11 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container px-4 py-8 mx-auto">
         <div className="text-center space-y-6 animate-fade-in">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400">
-            3D Model Search
-          </h1>
+          <img 
+            src="/lovable-uploads/0d84b7f9-8624-4a6c-ac49-a9e8b0d0d904.png" 
+            alt="Modelarium Logo" 
+            className="h-16 mx-auto mb-8"
+          />
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Find the perfect 3D printable model for your next project
           </p>
