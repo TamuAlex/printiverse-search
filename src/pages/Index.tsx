@@ -4,64 +4,92 @@ import { FilterSection } from "@/components/FilterSection";
 import { ModelCard } from "@/components/ModelCard";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Download } from "lucide-react";
+import { Eye, Download, Heart, MessageSquare, BookmarkCheck, Calendar } from "lucide-react";
+
+interface Model {
+  id: number;
+  name: string;
+  thumbnail: string;
+  url: string;
+  creator_name: string;
+  creator_url: string;
+  date_added: string;
+  like_count: number;
+  collect_count: number;
+  comment_count: number;
+  tags: string[];
+  price: number;
+  description: string;
+}
 
 // Mock data for demonstration
-const mockModels = [
+const mockModels: Model[] = [
   {
     id: 1,
-    title: "Low Poly Fox",
+    name: "Low Poly Fox",
+    thumbnail: "https://picsum.photos/seed/1/400",
+    url: "#",
+    creator_name: "3DCreator",
+    creator_url: "#",
+    date_added: "2024-02-15",
+    like_count: 245,
+    collect_count: 120,
+    comment_count: 35,
+    tags: ["animals", "low-poly", "cute", "desktop"],
+    price: 0,
     description: "A cute low poly fox model perfect for desktop 3D printing. This detailed model features low-poly aesthetics while maintaining the characteristic features of a fox. Perfect for beginners and experienced makers alike.",
-    imageUrl: "https://picsum.photos/seed/1/400",
-    fileFormats: ["STL", "OBJ"],
-    downloadUrl: "#",
-    viewUrl: "#",
-    author: "3DCreator",
-    likes: 245,
-    downloads: 1200,
   },
   {
     id: 2,
-    title: "Geometric Planter",
+    name: "Geometric Planter",
+    thumbnail: "https://picsum.photos/seed/2/400",
+    url: "#",
+    creator_name: "PlantLover3D",
+    creator_url: "#",
+    date_added: "2024-02-16",
+    like_count: 189,
+    collect_count: 85,
+    comment_count: 20,
+    tags: ["plants", "geometric", "planter"],
+    price: 0,
     description: "Modern geometric planter with drainage holes. Features a contemporary design with multiple faces that create interesting light patterns. Includes a built-in drainage system and raised base.",
-    imageUrl: "https://picsum.photos/seed/2/400",
-    fileFormats: ["STL", "3MF"],
-    downloadUrl: "#",
-    viewUrl: "#",
-    author: "PlantLover3D",
-    likes: 189,
-    downloads: 856,
   },
   {
     id: 3,
-    title: "Phone Stand",
+    name: "Phone Stand",
+    thumbnail: "https://picsum.photos/seed/3/400",
+    url: "#",
+    creator_name: "TechPrints",
+    creator_url: "#",
+    date_added: "2024-02-17",
+    like_count: 324,
+    collect_count: 150,
+    comment_count: 30,
+    tags: ["electronics", "phone", "stand"],
+    price: 0,
     description: "Adjustable phone stand with cable management. This ergonomic stand can be adjusted to multiple viewing angles and includes clever cable routing to keep your charging cables tidy.",
-    imageUrl: "https://picsum.photos/seed/3/400",
-    fileFormats: ["STL"],
-    downloadUrl: "#",
-    viewUrl: "#",
-    author: "TechPrints",
-    likes: 324,
-    downloads: 1500,
   },
   {
     id: 4,
-    title: "Desk Organizer",
+    name: "Desk Organizer",
+    thumbnail: "https://picsum.photos/seed/4/400",
+    url: "#",
+    creator_name: "OfficePro",
+    creator_url: "#",
+    date_added: "2024-02-18",
+    like_count: 421,
+    collect_count: 210,
+    comment_count: 40,
+    tags: ["office", "organizer", "supplies"],
+    price: 0,
     description: "Modular desk organizer for office supplies. This customizable organizer system includes multiple compartments for pens, paper clips, and other office essentials. Modules can be printed separately and connected.",
-    imageUrl: "https://picsum.photos/seed/4/400",
-    fileFormats: ["STL", "OBJ", "3MF"],
-    downloadUrl: "#",
-    viewUrl: "#",
-    author: "OfficePro",
-    likes: 421,
-    downloads: 2100,
   },
 ];
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedModel, setSelectedModel] = useState<typeof mockModels[0] | null>(null);
+  const [selectedModel, setSelectedModel] = useState<Model | null>(null);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query.toLowerCase());
@@ -69,15 +97,24 @@ const Index = () => {
 
   const filteredModels = mockModels.filter((model) => {
     const matchesSearch = 
-      model.title.toLowerCase().includes(searchQuery) ||
-      model.description.toLowerCase().includes(searchQuery);
+      model.name.toLowerCase().includes(searchQuery) ||
+      model.description.toLowerCase().includes(searchQuery) ||
+      model.tags.some(tag => tag.toLowerCase().includes(searchQuery));
     
     const matchesCategory = 
       selectedCategory === "All" || 
-      model.title.includes(selectedCategory);
+      model.tags.includes(selectedCategory.toLowerCase());
 
     return matchesSearch && matchesCategory;
   });
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -100,57 +137,93 @@ const Index = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8 animate-fade-in-up">
           {filteredModels.map((model) => (
             <ModelCard 
-              key={model.id} 
-              {...model} 
+              key={model.id}
+              title={model.name}
+              description={model.description}
+              imageUrl={model.thumbnail}
+              fileFormats={[]}
+              downloadUrl={model.url}
+              viewUrl={model.url}
               onClick={() => setSelectedModel(model)}
             />
           ))}
         </div>
 
         <Dialog open={!!selectedModel} onOpenChange={() => setSelectedModel(null)}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-4xl">
             {selectedModel && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="aspect-video overflow-hidden rounded-lg">
                   <img
-                    src={selectedModel.imageUrl}
-                    alt={selectedModel.title}
+                    src={selectedModel.thumbnail}
+                    alt={selectedModel.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-bold">{selectedModel.title}</h2>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-start">
+                    <h2 className="text-3xl font-bold">{selectedModel.name}</h2>
+                    {selectedModel.price > 0 && (
+                      <span className="text-2xl font-bold text-green-600 dark:text-green-400">
+                        ${selectedModel.price}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                    <a 
+                      href={selectedModel.creator_url}
+                      className="hover:text-blue-600 dark:hover:text-blue-400"
+                    >
+                      By {selectedModel.creator_name}
+                    </a>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      {formatDate(selectedModel.date_added)}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-4 text-sm">
+                    <span className="flex items-center gap-1">
+                      <Heart className="w-4 h-4" />
+                      {selectedModel.like_count} likes
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <BookmarkCheck className="w-4 h-4" />
+                      {selectedModel.collect_count} collections
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <MessageSquare className="w-4 h-4" />
+                      {selectedModel.comment_count} comments
+                    </span>
+                  </div>
+
                   <p className="text-gray-600 dark:text-gray-400">
                     {selectedModel.description}
                   </p>
-                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                    <span>By {selectedModel.author}</span>
-                    <div className="flex gap-4">
-                      <span>{selectedModel.likes} likes</span>
-                      <span>{selectedModel.downloads} downloads</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {selectedModel.fileFormats.map((format) => (
+
+                  <div className="flex flex-wrap gap-2">
+                    {selectedModel.tags.map((tag) => (
                       <Badge
-                        key={format}
+                        key={tag}
                         variant="secondary"
                         className="bg-gray-100 dark:bg-gray-800"
                       >
-                        {format}
+                        {tag}
                       </Badge>
                     ))}
                   </div>
+
                   <div className="flex justify-end gap-4 pt-4">
                     <a
-                      href={selectedModel.viewUrl}
+                      href={selectedModel.url}
                       className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       <Eye className="w-4 h-4" />
                       View Model
                     </a>
                     <a
-                      href={selectedModel.downloadUrl}
+                      href={selectedModel.url}
                       className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       <Download className="w-4 h-4" />
