@@ -18,7 +18,7 @@ interface ModelResponse {
 }
 
 export const fetchModels = async (searchQuery: string, filters: Record<string, any>): Promise<ModelResponse[]> => {
-  const response = await fetch('/api/get_models', {
+  const response = await fetch('/get_models', {  // Removed /api prefix
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export const fetchModels = async (searchQuery: string, filters: Record<string, a
   });
 
   if (!response.ok) {
-    throw new Error('Network response was not ok');
+    throw new Error(`Failed to fetch models: ${response.status} ${response.statusText}`);
   }
 
   return response.json();
