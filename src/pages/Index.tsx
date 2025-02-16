@@ -32,11 +32,10 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
 
-  const { data: models, isLoading, error, isError } = useQuery({
+  const { data: models = [], isLoading, error, isError } = useQuery({
     queryKey: ['models', searchQuery, selectedCategory],
     queryFn: () => fetchModels(searchQuery, { category: selectedCategory }),
-    enabled: searchQuery.length > 0, // Only fetch when there's a search query
-    initialData: [], // Initialize with empty array
+    enabled: searchQuery.length > 0,
   });
 
   const handleSearch = (query: string) => {
@@ -85,13 +84,13 @@ const Index = () => {
           </div>
         )}
 
-        {!isLoading && !isError && models && models.length === 0 && searchQuery && (
+        {!isLoading && !isError && models.length === 0 && searchQuery && (
           <div className="text-center py-8">
             <p className="text-gray-600 dark:text-gray-400">No models found. Try a different search term.</p>
           </div>
         )}
 
-        {!isLoading && !isError && models && models.length > 0 && (
+        {!isLoading && !isError && models.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8 animate-fade-in-up">
             {models.map((model) => (
               <ModelCard 
@@ -163,17 +162,19 @@ const Index = () => {
                     {selectedModel.description}
                   </p>
 
-                  <div className="flex flex-wrap gap-2">
-                    {selectedModel.tags.map((tag) => (
-                      <Badge
-                        key={tag}
-                        variant="secondary"
-                        className="bg-gray-100 dark:bg-gray-800"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
+                  {selectedModel.tags && selectedModel.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedModel.tags.map((tag) => (
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="bg-gray-100 dark:bg-gray-800"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
 
                   <div className="flex justify-center pt-6">
                     <a
