@@ -38,6 +38,8 @@ const Index = () => {
     enabled: searchQuery.length > 0,
   });
 
+  console.log('Current models:', models); // Add this for debugging
+
   const handleSearch = (query: string) => {
     setSearchQuery(query.toLowerCase());
   };
@@ -92,11 +94,11 @@ const Index = () => {
 
         {!isLoading && !isError && models.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8 animate-fade-in-up">
-            {models.map((model) => (
+            {models.map((model: Model) => (
               <ModelCard 
                 key={model.id}
                 title={model.name}
-                description={model.description}
+                description={model.description || ""}
                 imageUrl={model.thumbnail}
                 fileFormats={[]}
                 downloadUrl={model.public_url}
