@@ -18,7 +18,7 @@ interface ModelResponse {
 }
 
 export const fetchModels = async (searchQuery: string, filters: Record<string, any>): Promise<ModelResponse[]> => {
-  const response = await fetch('/get_models', {  // Removed /api prefix
+  const response = await fetch('/get_models', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
