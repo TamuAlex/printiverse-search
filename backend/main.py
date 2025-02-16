@@ -4,9 +4,10 @@ from dataclasses import dataclass
 from typing import List
 from thingiverse import ThingiverseModel
 from curl_cffi import requests
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 #@dataclass
 #class Model:
@@ -25,6 +26,7 @@ app = Flask(__name__)
 #    creator_thumbnail: str
 #    price: str = "free"
 #    description: str = ""
+
 key_thingiverse = "2f1239af02548dbf83407b8bb7c8042f"
 @app.route('/get_models', methods=['POST'])
 def get_models():
@@ -33,11 +35,9 @@ def get_models():
     filters = data.get('filters', {})
     models = get_models_thingiverse(search_query,filters)
     
-    
     return jsonify(models)
 
 def get_models_thingiverse(search_query,parameters={}):
-
     list_models = []
     headers = {"Authorization": f"Bearer {key_thingiverse}", "media-type": "application/json"}
 
