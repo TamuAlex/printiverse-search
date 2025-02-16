@@ -32,9 +32,11 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
 
-  const { data: models = [], isLoading, error } = useQuery({
+  const { data: models, isLoading, error, isError } = useQuery({
     queryKey: ['models', searchQuery, selectedCategory],
     queryFn: () => fetchModels(searchQuery, { category: selectedCategory }),
+    enabled: searchQuery.length > 0, // Only fetch when there's a search query
+    initialData: [], // Initialize with empty array
   });
 
   const handleSearch = (query: string) => {
@@ -75,28 +77,38 @@ const Index = () => {
           </div>
         )}
 
-        {error && (
+        {isError && (
           <div className="text-center py-8">
-            <p className="text-red-600 dark:text-red-400">Error loading models. Please try again.</p>
+            <p className="text-red-600 dark:text-red-400">
+              Error loading models: {error instanceof Error ? error.message : 'Unknown error occurred'}
+            </p>
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8 animate-fade-in-up">
-          {models.map((model) => (
-            <ModelCard 
-              key={model.id}
-              title={model.name}
-              description={model.description}
-              imageUrl={model.thumbnail}
-              fileFormats={[]}
-              downloadUrl={model.public_url}
-              viewUrl={model.public_url}
-              likeCount={model.like_count}
-              collectCount={model.collect_count}
-              onClick={() => setSelectedModel(model)}
-            />
-          ))}
-        </div>
+        {!isLoading && !isError && models && models.length === 0 && searchQuery && (
+          <div className="text-center py-8">
+            <p className="text-gray-600 dark:text-gray-400">No models found. Try a different search term.</p>
+          </div>
+        )}
+
+        {!isLoading && !isError && models && models.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8 animate-fade-in-up">
+            {models.map((model) => (
+              <ModelCard 
+                key={model.id}
+                title={model.name}
+                description={model.description}
+                imageUrl={model.thumbnail}
+                fileFormats={[]}
+                downloadUrl={model.public_url}
+                viewUrl={model.public_url}
+                likeCount={model.like_count}
+                collectCount={model.collect_count}
+                onClick={() => setSelectedModel(model)}
+              />
+            ))}
+          </div>
+        )}
 
         <Dialog open={!!selectedModel} onOpenChange={() => setSelectedModel(null)}>
           <DialogContent className="max-w-4xl">
