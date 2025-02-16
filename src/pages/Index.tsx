@@ -1,112 +1,45 @@
+
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { SearchInput } from "@/components/SearchInput";
 import { FilterSection } from "@/components/FilterSection";
 import { ModelCard } from "@/components/ModelCard";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Download, Heart, MessageSquare, BookmarkCheck, Calendar } from "lucide-react";
+import { fetchModels } from "@/services/api";
 
 interface Model {
   id: number;
   name: string;
   thumbnail: string;
-  url: string;
+  public_url: string;
   creator_name: string;
   creator_url: string;
-  date_added: string;
+  f_added: string;
   like_count: number;
   collect_count: number;
   comment_count: number;
+  is_nsfw: boolean;
   tags: string[];
-  price: number;
+  creator_thumbnail: string;
+  price: string;
   description: string;
 }
-
-// Mock data for demonstration
-const mockModels: Model[] = [
-  {
-    id: 1,
-    name: "Low Poly Fox",
-    thumbnail: "https://picsum.photos/seed/1/400",
-    url: "#",
-    creator_name: "3DCreator",
-    creator_url: "#",
-    date_added: "2024-02-15",
-    like_count: 245,
-    collect_count: 120,
-    comment_count: 35,
-    tags: ["animals", "low-poly", "cute", "desktop"],
-    price: 0,
-    description: "A cute low poly fox model perfect for desktop 3D printing. This detailed model features low-poly aesthetics while maintaining the characteristic features of a fox. Perfect for beginners and experienced makers alike.",
-  },
-  {
-    id: 2,
-    name: "Geometric Planter",
-    thumbnail: "https://picsum.photos/seed/2/400",
-    url: "#",
-    creator_name: "PlantLover3D",
-    creator_url: "#",
-    date_added: "2024-02-16",
-    like_count: 189,
-    collect_count: 85,
-    comment_count: 20,
-    tags: ["plants", "geometric", "planter"],
-    price: 0,
-    description: "Modern geometric planter with drainage holes. Features a contemporary design with multiple faces that create interesting light patterns. Includes a built-in drainage system and raised base.",
-  },
-  {
-    id: 3,
-    name: "Phone Stand",
-    thumbnail: "https://picsum.photos/seed/3/400",
-    url: "#",
-    creator_name: "TechPrints",
-    creator_url: "#",
-    date_added: "2024-02-17",
-    like_count: 324,
-    collect_count: 150,
-    comment_count: 30,
-    tags: ["electronics", "phone", "stand"],
-    price: 0,
-    description: "Adjustable phone stand with cable management. This ergonomic stand can be adjusted to multiple viewing angles and includes clever cable routing to keep your charging cables tidy.",
-  },
-  {
-    id: 4,
-    name: "Desk Organizer",
-    thumbnail: "https://picsum.photos/seed/4/400",
-    url: "#",
-    creator_name: "OfficePro",
-    creator_url: "#",
-    date_added: "2024-02-18",
-    like_count: 421,
-    collect_count: 210,
-    comment_count: 40,
-    tags: ["office", "organizer", "supplies"],
-    price: 0,
-    description: "Modular desk organizer for office supplies. This customizable organizer system includes multiple compartments for pens, paper clips, and other office essentials. Modules can be printed separately and connected.",
-  },
-];
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
 
+  const { data: models = [], isLoading, error } = useQuery({
+    queryKey: ['models', searchQuery, selectedCategory],
+    queryFn: () => fetchModels(searchQuery, { category: selectedCategory }),
+  });
+
   const handleSearch = (query: string) => {
     setSearchQuery(query.toLowerCase());
   };
-
-  const filteredModels = mockModels.filter((model) => {
-    const matchesSearch = 
-      model.name.toLowerCase().includes(searchQuery) ||
-      model.description.toLowerCase().includes(searchQuery) ||
-      model.tags.some(tag => tag.toLowerCase().includes(searchQuery));
-    
-    const matchesCategory = 
-      selectedCategory === "All" || 
-      model.tags.includes(selectedCategory.toLowerCase());
-
-    return matchesSearch && matchesCategory;
-  });
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -136,16 +69,28 @@ const Index = () => {
           onCategoryChange={setSelectedCategory}
         />
 
+        {isLoading && (
+          <div className="text-center py-8">
+            <p className="text-gray-600 dark:text-gray-400">Loading models...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="text-center py-8">
+            <p className="text-red-600 dark:text-red-400">Error loading models. Please try again.</p>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8 animate-fade-in-up">
-          {filteredModels.map((model) => (
+          {models.map((model) => (
             <ModelCard 
               key={model.id}
               title={model.name}
               description={model.description}
               imageUrl={model.thumbnail}
               fileFormats={[]}
-              downloadUrl={model.url}
-              viewUrl={model.url}
+              downloadUrl={model.public_url}
+              viewUrl={model.public_url}
               likeCount={model.like_count}
               collectCount={model.collect_count}
               onClick={() => setSelectedModel(model)}
@@ -167,9 +112,9 @@ const Index = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-start">
                     <h2 className="text-3xl font-bold">{selectedModel.name}</h2>
-                    {selectedModel.price > 0 && (
+                    {selectedModel.price !== "free" && (
                       <span className="text-2xl font-bold text-green-600 dark:text-green-400">
-                        ${selectedModel.price}
+                        {selectedModel.price}
                       </span>
                     )}
                   </div>
@@ -183,7 +128,7 @@ const Index = () => {
                     </a>
                     <span className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      {formatDate(selectedModel.date_added)}
+                      {formatDate(selectedModel.f_added)}
                     </span>
                   </div>
 
@@ -220,7 +165,7 @@ const Index = () => {
 
                   <div className="flex justify-center pt-6">
                     <a
-                      href={selectedModel.url}
+                      href={selectedModel.public_url}
                       className="inline-flex items-center gap-2 px-6 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
                     >
                       <Download className="w-5 h-5" />
