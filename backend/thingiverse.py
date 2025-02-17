@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import json
 
 @dataclass
 class ThingiverseModel():
@@ -27,4 +28,24 @@ class ThingiverseModel():
             description = description + str(tag["name"]) + " - "
 
         return description[:-2]
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "thumbnail": self.thumbnail,
+            "public_url": self.public_url,
+            "creator_name": self.creator_name,
+            "creator_url": self.creator_url,
+            "f_added": self.f_added,
+            "like_count": self.like_count,
+            "collect_count": self.collect_count,
+            "comment_count": self.comment_count,
+            "is_nsfw": self.is_nsfw,
+            #"tags": " - ".join([tag.name for tag in self.tags]),
+            "tags": json.loads(self.tags),
+            "creator_thumbnail": self.creator_thumbnail,
+            "price": self.price,
+            "description": self.description
+        }
 
