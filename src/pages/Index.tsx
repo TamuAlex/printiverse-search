@@ -1,5 +1,5 @@
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { SearchInput } from "@/components/SearchInput";
 import { FilterSection } from "@/components/FilterSection";
@@ -82,8 +82,8 @@ const Index = () => {
     [fetchNextPage, hasNextPage, isFetchingNextPage]
   );
 
-  // Set up the intersection observer
-  useState(() => {
+  // Set up the intersection observer using useEffect instead of useState
+  useEffect(() => {
     const observer = new IntersectionObserver(onIntersect, {
       root: null,
       rootMargin: "0px",
