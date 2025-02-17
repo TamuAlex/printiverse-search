@@ -107,14 +107,12 @@ def get_models_thingiverse(search_query, parameters={}):
     
 
 
-    return list_models
-
 def format_parameters_thingiverse(parameters):
     if "sort" not in parameters:
         parameters["sort"] = "popular"
     
     parameters["type"] = "things"
-    parameters["per_page"] = "10"
+    parameters["per_page"] = "50"
     #parameters["page"] = 1
     return parameters
 
