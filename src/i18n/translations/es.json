@@ -10,7 +10,21 @@
     "loading": "Cargando modelos...",
     "noResults": "No se encontraron modelos. Intenta con otra búsqueda.",
     "error": "Error al cargar modelos:",
-    "loadingMore": "Cargando más modelos..."
+    "loadingMore": "Cargando más modelos...",
+    "features": {
+      "unifiedSearch": {
+        "title": "Búsqueda Unificada",
+        "description": "Busca en múltiples repositorios de modelos 3D en un solo lugar, ahorrando tiempo y esfuerzo."
+      },
+      "comprehensiveResults": {
+        "title": "Resultados Completos",
+        "description": "Encuentra modelos de varias fuentes, asegurando las mejores opciones para tu proyecto."
+      },
+      "smartFiltering": {
+        "title": "Filtrado Inteligente",
+        "description": "Filtra y ordena resultados fácilmente para encontrar exactamente lo que necesitas para tu proyecto de impresión 3D."
+      }
+    }
   },
   "aboutUs": {
     "title": "Sobre Nosotros",

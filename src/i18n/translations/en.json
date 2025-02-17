@@ -10,7 +10,21 @@
     "loading": "Loading models...",
     "noResults": "No models found. Try a different search term.",
     "error": "Error loading models:",
-    "loadingMore": "Loading more models..."
+    "loadingMore": "Loading more models...",
+    "features": {
+      "unifiedSearch": {
+        "title": "Unified Search",
+        "description": "Search across multiple 3D model repositories in one place, saving you time and effort."
+      },
+      "comprehensiveResults": {
+        "title": "Comprehensive Results",
+        "description": "Find models from various sources, ensuring you get the best options for your project."
+      },
+      "smartFiltering": {
+        "title": "Smart Filtering",
+        "description": "Easily filter and sort results to find exactly what you need for your 3D printing project."
+      }
+    }
   },
   "aboutUs": {
     "title": "About Us",
