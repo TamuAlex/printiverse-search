@@ -1,6 +1,6 @@
-
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { SearchInput } from "@/components/SearchInput";
 import { FilterSection } from "@/components/FilterSection";
 import { ModelCard } from "@/components/ModelCard";
@@ -8,6 +8,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Download, Heart, MessageSquare, BookmarkCheck, Calendar } from "lucide-react";
 import { fetchModels } from "@/services/api";
+import { Header } from "@/components/Header";
 
 interface Tag {
   absolute_url?: string;
@@ -37,6 +38,7 @@ interface Model {
 }
 
 const Index = () => {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
@@ -71,7 +73,6 @@ const Index = () => {
     });
   };
 
-  // Intersection Observer setup
   const onIntersect = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const [entry] = entries;
@@ -82,7 +83,6 @@ const Index = () => {
     [fetchNextPage, hasNextPage, isFetchingNextPage]
   );
 
-  // Set up the intersection observer using useEffect instead of useState
   useEffect(() => {
     const observer = new IntersectionObserver(onIntersect, {
       root: null,
@@ -101,11 +101,11 @@ const Index = () => {
     };
   }, [onIntersect]);
 
-  // Flatten all pages of data
   const models = data?.pages.flat() || [];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <Header />
       <div className="container px-4 py-8 mx-auto">
         <div className="text-center space-y-6 animate-fade-in">
           <img 
@@ -114,7 +114,7 @@ const Index = () => {
             className="h-24 mx-auto mb-8"
           />
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Find the perfect 3D printable model for your next project
+            {t('home.title')}
           </p>
           <SearchInput onSearch={handleSearch} />
         </div>
@@ -126,21 +126,21 @@ const Index = () => {
 
         {status === 'pending' && (
           <div className="text-center py-8">
-            <p className="text-gray-600 dark:text-gray-400">Loading models...</p>
+            <p className="text-gray-600 dark:text-gray-400">{t('home.loading')}</p>
           </div>
         )}
 
         {status === 'error' && (
           <div className="text-center py-8">
             <p className="text-red-600 dark:text-red-400">
-              Error loading models: {error instanceof Error ? error.message : 'Unknown error occurred'}
+              {t('home.error')} {error instanceof Error ? error.message : 'Unknown error occurred'}
             </p>
           </div>
         )}
 
         {status === 'success' && models.length === 0 && searchQuery && (
           <div className="text-center py-8">
-            <p className="text-gray-600 dark:text-gray-400">No models found. Try a different search term.</p>
+            <p className="text-gray-600 dark:text-gray-400">{t('home.noResults')}</p>
           </div>
         )}
 
@@ -163,14 +163,13 @@ const Index = () => {
               ))}
             </div>
             
-            {/* Intersection Observer Target */}
             <div 
               ref={observerTarget}
               className="h-10 mt-4"
             >
               {isFetchingNextPage && (
                 <p className="text-center text-gray-600 dark:text-gray-400">
-                  Loading more models...
+                  {t('home.loadingMore')}
                 </p>
               )}
             </div>
@@ -250,7 +249,7 @@ const Index = () => {
                       className="inline-flex items-center gap-2 px-6 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
                     >
                       <Download className="w-5 h-5" />
-                      Download Model
+                      {t('home.downloadModel')}
                     </a>
                   </div>
                 </div>

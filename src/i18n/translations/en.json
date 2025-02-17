@@ -1,0 +1,19 @@
+
+{
+  "header": {
+    "aboutUs": "About Us",
+    "language": "Language"
+  },
+  "home": {
+    "title": "Find the perfect 3D printable model for your next project",
+    "searchPlaceholder": "Search models...",
+    "loading": "Loading models...",
+    "noResults": "No models found. Try a different search term.",
+    "error": "Error loading models:",
+    "loadingMore": "Loading more models..."
+  },
+  "aboutUs": {
+    "title": "About Us",
+    "description": "Welcome to our 3D model marketplace. We are passionate about bringing creators and makers together, providing a platform where amazing 3D printable designs can be shared and discovered."
+  }
+}

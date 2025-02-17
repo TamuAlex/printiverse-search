@@ -1,0 +1,19 @@
+
+{
+  "header": {
+    "aboutUs": "Sobre Nosotros",
+    "language": "Idioma"
+  },
+  "home": {
+    "title": "Encuentra el modelo 3D perfecto para tu próximo proyecto",
+    "searchPlaceholder": "Buscar modelos...",
+    "loading": "Cargando modelos...",
+    "noResults": "No se encontraron modelos. Intenta con otra búsqueda.",
+    "error": "Error al cargar modelos:",
+    "loadingMore": "Cargando más modelos..."
+  },
+  "aboutUs": {
+    "title": "Sobre Nosotros",
+    "description": "Bienvenido a nuestro mercado de modelos 3D. Nos apasiona unir a creadores y makers, proporcionando una plataforma donde se pueden compartir y descubrir increíbles diseños imprimibles en 3D."
+  }
+}
