@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { SearchInput } from "@/components/SearchInput";
 import { FilterSection } from "@/components/FilterSection";
 import { ModelCard } from "@/components/ModelCard";
@@ -30,7 +30,7 @@ interface Model {
   collect_count: number;
   comment_count: number;
   is_nsfw: boolean;
-  tags: Tag[];  // Updated type to match the API response
+  tags: Tag[];
   creator_thumbnail: string;
   price: string;
   description: string;
@@ -40,21 +40,28 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
+  const observerTarget = useRef<HTMLDivElement>(null);
 
-  const { data: models = [], isLoading, error, isError } = useQuery({
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    status,
+    error,
+  } = useInfiniteQuery({
     queryKey: ['models', searchQuery, selectedCategory],
-    queryFn: () => fetchModels(searchQuery, { category: selectedCategory }),
+    queryFn: ({ pageParam = 1 }) => fetchModels(searchQuery, { category: selectedCategory }, pageParam),
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.length === 20 ? allPages.length + 1 : undefined;
+    },
     enabled: searchQuery.length > 0,
+    initialPageParam: 1,
   });
 
-  console.log('Models in component:', models);
-
   const handleSearch = (query: string) => {
-    console.log("handle search")
     setSearchQuery(query.toLowerCase());
   };
-  console.log('Models received:', models);
-  console.log('Model IDs:', models.map(model => model.id));
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -63,6 +70,39 @@ const Index = () => {
       day: 'numeric'
     });
   };
+
+  // Intersection Observer setup
+  const onIntersect = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
+
+  // Set up the intersection observer using useEffect instead of useState
+  useEffect(() => {
+    const observer = new IntersectionObserver(onIntersect, {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1.0,
+    });
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [onIntersect]);
+
+  // Flatten all pages of data
+  const models = data?.pages.flat() || [];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -84,13 +124,13 @@ const Index = () => {
           onCategoryChange={setSelectedCategory}
         />
 
-        {isLoading && (
+        {status === 'pending' && (
           <div className="text-center py-8">
             <p className="text-gray-600 dark:text-gray-400">Loading models...</p>
           </div>
         )}
 
-        {isError && (
+        {status === 'error' && (
           <div className="text-center py-8">
             <p className="text-red-600 dark:text-red-400">
               Error loading models: {error instanceof Error ? error.message : 'Unknown error occurred'}
@@ -98,112 +138,126 @@ const Index = () => {
           </div>
         )}
 
-        {!isLoading && !isError && models.length === 0 && searchQuery && (
+        {status === 'success' && models.length === 0 && searchQuery && (
           <div className="text-center py-8">
             <p className="text-gray-600 dark:text-gray-400">No models found. Try a different search term.</p>
           </div>
         )}
-        
-        {!isLoading && !isError && models.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8 animate-fade-in-up">
-            {models.map((model: Model) => (
-              <ModelCard 
-                key={model.id}
-                title={model.name}
-                description={model.description || ""}
-                imageUrl={model.thumbnail}
-                fileFormats={[]}
-                downloadUrl={model.public_url}
-                viewUrl={model.public_url}
-                likeCount={model.like_count}
-                collectCount={model.collect_count}
-                onClick={() => setSelectedModel(model)}
-              />
-            ))}
-          </div>
-        )}
 
-<Dialog open={!!selectedModel} onOpenChange={() => setSelectedModel(null)}>
-  <DialogContent className="max-w-4xl">
-    {selectedModel && (
-      <div className="space-y-6">
-        <div className="aspect-video overflow-hidden rounded-lg">
-          <img
-            src={selectedModel.thumbnail}
-            alt={selectedModel.name}
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="space-y-4">
-          <div className="flex justify-between items-start">
-            <h2 className="text-3xl font-bold">{selectedModel.name}</h2>
-            {selectedModel.price !== "free" && (
-              <span className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {selectedModel.price}
-              </span>
-            )}
-          </div>
-          
-          <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-            <a 
-              href={selectedModel.creator_url}
-              className="hover:text-blue-600 dark:hover:text-blue-400"
-            >
-              By {selectedModel.creator_name}
-            </a>
-            <span className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              {formatDate(selectedModel.f_added)}
-            </span>
-          </div>
-
-          <div className="flex flex-wrap gap-4 text-sm">
-            <span className="flex items-center gap-1">
-              <Heart className="w-4 h-4" />
-              {selectedModel.like_count} likes
-            </span>
-            <span className="flex items-center gap-1">
-              <BookmarkCheck className="w-4 h-4" />
-              {selectedModel.collect_count} collections
-            </span>
-            <span className="flex items-center gap-1">
-              <MessageSquare className="w-4 h-4" />
-              {selectedModel.comment_count} comments
-            </span>
-          </div>
-
-          <p className="text-gray-600 dark:text-gray-400">
-            {selectedModel.description}
-          </p>
-
-          {selectedModel.tags && selectedModel.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {selectedModel.tags.map((tag, index) => (
-                <Badge
-                  key={index}
-                  variant="secondary"
-                  className="bg-gray-100 dark:bg-gray-800"
-                >
-                  {typeof tag === 'string' ? tag : tag.name}
-                </Badge>
+        {status === 'success' && models.length > 0 && (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8 animate-fade-in-up">
+              {models.map((model) => (
+                <ModelCard 
+                  key={model.id}
+                  title={model.name}
+                  description={model.description}
+                  imageUrl={model.thumbnail}
+                  fileFormats={[]}
+                  downloadUrl={model.public_url}
+                  viewUrl={model.public_url}
+                  likeCount={model.like_count}
+                  collectCount={model.collect_count}
+                  onClick={() => setSelectedModel(model)}
+                />
               ))}
             </div>
-          )}
-
-          <div className="flex justify-center pt-6">
-            <a
-              href={selectedModel.public_url}
-              className="inline-flex items-center gap-2 px-6 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+            
+            {/* Intersection Observer Target */}
+            <div 
+              ref={observerTarget}
+              className="h-10 mt-4"
             >
-              <Download className="w-5 h-5" />
-              Download Model
-            </a>
-          </div>
-        </div>
-      </div>
-    )}
-  </DialogContent>
-</Dialog>
+              {isFetchingNextPage && (
+                <p className="text-center text-gray-600 dark:text-gray-400">
+                  Loading more models...
+                </p>
+              )}
+            </div>
+          </>
+        )}
+
+        <Dialog open={!!selectedModel} onOpenChange={() => setSelectedModel(null)}>
+          <DialogContent className="max-w-4xl">
+            {selectedModel && (
+              <div className="space-y-6">
+                <div className="aspect-video overflow-hidden rounded-lg">
+                  <img
+                    src={selectedModel.thumbnail}
+                    alt={selectedModel.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-start">
+                    <h2 className="text-3xl font-bold">{selectedModel.name}</h2>
+                    {selectedModel.price !== "free" && (
+                      <span className="text-2xl font-bold text-green-600 dark:text-green-400">
+                        {selectedModel.price}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                    <a 
+                      href={selectedModel.creator_url}
+                      className="hover:text-blue-600 dark:hover:text-blue-400"
+                    >
+                      By {selectedModel.creator_name}
+                    </a>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      {formatDate(selectedModel.f_added)}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-4 text-sm">
+                    <span className="flex items-center gap-1">
+                      <Heart className="w-4 h-4" />
+                      {selectedModel.like_count} likes
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <BookmarkCheck className="w-4 h-4" />
+                      {selectedModel.collect_count} collections
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <MessageSquare className="w-4 h-4" />
+                      {selectedModel.comment_count} comments
+                    </span>
+                  </div>
+
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {selectedModel.description}
+                  </p>
+
+                  {selectedModel.tags && selectedModel.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedModel.tags.map((tag, index) => (
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className="bg-gray-100 dark:bg-gray-800"
+                        >
+                          {typeof tag === 'string' ? tag : tag.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="flex justify-center pt-6">
+                    <a
+                      href={selectedModel.public_url}
+                      className="inline-flex items-center gap-2 px-6 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+                    >
+                      <Download className="w-5 h-5" />
+                      Download Model
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

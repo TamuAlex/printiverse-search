@@ -1,3 +1,4 @@
+
 interface Tag {
   absolute_url?: string;
   count?: number;
@@ -27,10 +28,11 @@ interface ModelResponse {
 
 export const fetchModels = async (
   searchQuery: string, 
-  filters: Record<string, any>
+  filters: Record<string, any>,
+  page: number = 1
 ): Promise<ModelResponse[]> => {
   try {
-    console.log("Fetching models with query:", searchQuery);
+    console.log("Fetching models with query:", searchQuery, "page:", page);
     
     const response = await fetch('http://localhost:5000/get_models', {
       method: 'POST',
@@ -40,7 +42,7 @@ export const fetchModels = async (
       },
       body: JSON.stringify({
         query: searchQuery,
-        filters: filters,
+        filters: { ...filters, page, per_page: 20 },
       }),
     });
 
@@ -48,7 +50,7 @@ export const fetchModels = async (
       throw new Error(`Failed to fetch models: ${response.status} ${response.statusText}`);
     }
 
-    const rawData = await response.text(); // Get raw response text first
+    const rawData = await response.text();
     console.log("Raw response:", rawData);
     
     let data;
@@ -67,7 +69,6 @@ export const fetchModels = async (
     }
 
     const mappedModels = data.map((modelStr: any) => {
-      // If the data is still a string, try to parse it
       let modelData = typeof modelStr === 'string' ? JSON.parse(modelStr) : modelStr;
       console.log("Processing model:", modelData);
       
