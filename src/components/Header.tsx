@@ -3,13 +3,18 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Globe } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Header = () => {
   const { t, i18n } = useTranslation();
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'es' : 'en';
-    i18n.changeLanguage(newLang);
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
   };
 
   return (
@@ -24,14 +29,25 @@ export const Header = () => {
               {t('header.aboutUs')}
             </Button>
           </Link>
-          <Button 
-            variant="outline" 
-            onClick={toggleLanguage}
-            className="flex items-center gap-2"
-          >
-            <Globe className="w-4 h-4" />
-            {t('header.language')}
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                <Globe className="w-4 h-4" />
+                {t('header.language')}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => changeLanguage('en')}>
+                English
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => changeLanguage('es')}>
+                Español
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
