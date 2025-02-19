@@ -35,8 +35,16 @@ const categories = [
 ];
 
 const repositories = [
-  { id: "thingiverse", name: "Thingiverse" },
-  { id: "cults3d", name: "Cults3D" },
+  { 
+    id: "thingiverse", 
+    name: "Thingiverse",
+    className: "font-thingiverse text-[#248BFB] font-bold"
+  },
+  { 
+    id: "cults3d", 
+    name: "Cults3D",
+    className: "font-cults text-[#822ef5] font-semibold"
+  },
 ];
 
 export const FilterSection = ({
@@ -90,6 +98,7 @@ export const FilterSection = ({
                   onReposChange(selectedRepos.filter((r) => r !== repo.id));
                 }
               }}
+              className={repo.className}
             >
               {repo.name}
             </DropdownMenuCheckboxItem>

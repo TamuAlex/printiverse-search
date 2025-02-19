@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -53,6 +52,10 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      fontFamily: {
+        'thingiverse': ['Roboto', 'sans-serif'],
+        'cults': ['Poppins', 'sans-serif'],
       },
       keyframes: {
         "accordion-down": {
