@@ -1,4 +1,3 @@
-
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -206,6 +205,7 @@ const Index = () => {
                   viewUrl={model.public_url}
                   likeCount={model.like_count}
                   collectCount={model.collect_count}
+                  repo={model.repo}
                   onClick={() => setSelectedModel(model)}
                 />
               ))}

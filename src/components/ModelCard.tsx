@@ -12,8 +12,20 @@ interface ModelCardProps {
   viewUrl: string;
   likeCount?: number;
   collectCount?: number;
+  repo?: string;
   onClick?: () => void;
 }
+
+const repoConfig = {
+  thingiverse: {
+    name: "Thingiverse",
+    className: "bg-[#248BFB]/10 text-[#248BFB] font-thingiverse font-bold"
+  },
+  cults3d: {
+    name: "Cults3D",
+    className: "bg-[#822ef5]/10 text-[#822ef5] font-cults font-semibold"
+  }
+};
 
 export const ModelCard = ({
   title,
@@ -24,6 +36,7 @@ export const ModelCard = ({
   viewUrl,
   likeCount,
   collectCount,
+  repo,
   onClick,
 }: ModelCardProps) => {
   return (
@@ -40,7 +53,14 @@ export const ModelCard = ({
         />
       </div>
       <div className="p-4 space-y-3">
-        <h3 className="font-semibold text-lg leading-tight line-clamp-1">{title}</h3>
+        <div className="flex justify-between items-start gap-2">
+          <h3 className="font-semibold text-lg leading-tight line-clamp-1">{title}</h3>
+          {repo && repoConfig[repo as keyof typeof repoConfig] && (
+            <Badge variant="secondary" className={repoConfig[repo as keyof typeof repoConfig].className}>
+              {repoConfig[repo as keyof typeof repoConfig].name}
+            </Badge>
+          )}
+        </div>
         <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{description}</p>
         <div className="flex flex-wrap gap-2">
           {fileFormats.map((format) => (
