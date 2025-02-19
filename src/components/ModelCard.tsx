@@ -53,14 +53,7 @@ export const ModelCard = ({
         />
       </div>
       <div className="p-4 space-y-3">
-        <div className="flex justify-between items-start gap-2">
-          <h3 className="font-semibold text-lg leading-tight line-clamp-1">{title}</h3>
-          {repo && repoConfig[repo as keyof typeof repoConfig] && (
-            <Badge variant="secondary" className={repoConfig[repo as keyof typeof repoConfig].className}>
-              {repoConfig[repo as keyof typeof repoConfig].name}
-            </Badge>
-          )}
-        </div>
+        <h3 className="font-semibold text-lg leading-tight line-clamp-1">{title}</h3>
         <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{description}</p>
         <div className="flex flex-wrap gap-2">
           {fileFormats.map((format) => (
@@ -73,25 +66,32 @@ export const ModelCard = ({
             </Badge>
           ))}
         </div>
-        <div className="flex justify-between items-center pt-2">
-          <div className="flex gap-3 text-sm text-gray-600 dark:text-gray-400">
-            <span className="flex items-center gap-1">
-              <Heart className="w-4 h-4" />
-              {likeCount || 0}
-            </span>
-            <span className="flex items-center gap-1">
-              <BookmarkCheck className="w-4 h-4" />
-              {collectCount || 0}
-            </span>
+        <div className="space-y-3">
+          {repo && repoConfig[repo as keyof typeof repoConfig] && (
+            <Badge variant="secondary" className={repoConfig[repo as keyof typeof repoConfig].className}>
+              {repoConfig[repo as keyof typeof repoConfig].name}
+            </Badge>
+          )}
+          <div className="flex justify-between items-center">
+            <div className="flex gap-3 text-sm text-gray-600 dark:text-gray-400">
+              <span className="flex items-center gap-1">
+                <Heart className="w-4 h-4" />
+                {likeCount || 0}
+              </span>
+              <span className="flex items-center gap-1">
+                <BookmarkCheck className="w-4 h-4" />
+                {collectCount || 0}
+              </span>
+            </div>
+            <a
+              href={downloadUrl}
+              className="inline-flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Download className="w-4 h-4" />
+              Download
+            </a>
           </div>
-          <a
-            href={downloadUrl}
-            className="inline-flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Download className="w-4 h-4" />
-            Download
-          </a>
         </div>
       </div>
     </Card>
