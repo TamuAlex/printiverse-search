@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from dataclasses import dataclass
 from typing import List
 from thingiverse import get_models_thingiverse
+from cults3d import get_models_cults
 from flask_cors import CORS
 import json
 
@@ -31,6 +32,7 @@ def get_models():
     data = request.get_json()
     search_query = data.get('query', '')
     filters = data.get('filters', {})
+    print(f"filters: {filters}")
     
     # Get repositories filter
     repositories = filters.get('repositories', [])
@@ -44,13 +46,12 @@ def get_models():
     # If no repositories specified or 'cults3d' is in the list, get Cults3D models
     # Note: Implement get_models_cults3d when available
     if not repositories or 'cults3d' in repositories:
-        # cults3d_models = get_models_cults3d(search_query, filters)
-        # all_models.extend(cults3d_models)
-        pass
+        cults3d_models = get_models_cults(search_query, filters)
+        all_models.extend(cults3d_models)
+    
 
     print(f"{len(all_models)} models found")
     print("Backend returning models:")
-    print(json.dumps(all_models, indent=2))
     return jsonify(all_models)
 
 if __name__ == '__main__':

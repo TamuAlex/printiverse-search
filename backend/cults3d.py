@@ -1,7 +1,7 @@
 from curl_cffi import requests
 
 
-def get_models_thingiverse(search_query, parameters={}, key_cults="", username_cults=""):
+def get_models_cults(search_query, parameters={}, key_cults="", username_cults=""):
     """
     Fetch models from Cults3D using GraphQL query
     """

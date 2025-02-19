@@ -17,11 +17,11 @@ interface ModelCardProps {
 }
 
 const repoConfig = {
-  thingiverse: {
+  Thingiverse: {
     name: "Thingiverse",
     className: "bg-[#248BFB]/10 text-[#248BFB] font-thingiverse font-bold"
   },
-  cults3d: {
+  Cults3d: {
     name: "Cults3D",
     className: "bg-[#822ef5]/10 text-[#822ef5] font-cults font-semibold"
   }
@@ -39,6 +39,7 @@ export const ModelCard = ({
   repo,
   onClick,
 }: ModelCardProps) => {
+  console.log(repo)
   return (
     <Card 
       className="overflow-hidden group transition-all duration-300 hover:shadow-xl bg-white/80 dark:bg-black/80 backdrop-blur-sm border border-gray-200 dark:border-gray-800 cursor-pointer"
