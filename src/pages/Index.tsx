@@ -44,6 +44,7 @@ const Index = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedRepos, setSelectedRepos] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
   const observerTarget = useRef<HTMLDivElement>(null);
   const PAGE_SIZE = 20;
@@ -56,8 +57,15 @@ const Index = () => {
     status,
     error,
   } = useInfiniteQuery({
-    queryKey: ['models', searchQuery, selectedCategory],
-    queryFn: ({ pageParam = 1 }) => fetchModels(searchQuery, { category: selectedCategory }, pageParam),
+    queryKey: ['models', searchQuery, selectedCategory, selectedRepos],
+    queryFn: ({ pageParam = 1 }) => fetchModels(
+      searchQuery, 
+      { 
+        category: selectedCategory, 
+        repositories: selectedRepos.length > 0 ? selectedRepos : undefined,
+        page: pageParam 
+      }
+    ),
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
     },
@@ -125,7 +133,9 @@ const Index = () => {
 
         <FilterSection
           selectedCategory={selectedCategory}
+          selectedRepos={selectedRepos}
           onCategoryChange={setSelectedCategory}
+          onReposChange={setSelectedRepos}
         />
 
         {!searchQuery && (
