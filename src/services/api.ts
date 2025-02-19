@@ -24,6 +24,7 @@ interface ModelResponse {
   creator_thumbnail: string;
   price: string;
   description: string;
+  repo: string;
 }
 
 export const fetchModels = async (
@@ -88,6 +89,7 @@ export const fetchModels = async (
         creator_thumbnail: modelData.creator_thumbnail,
         price: modelData.price || "free",
         description: modelData.description || "",
+        repo: modelData.repo || ""
       };
     });
 

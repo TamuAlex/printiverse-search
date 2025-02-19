@@ -5,11 +5,12 @@ import { useTranslation } from "react-i18next";
 import { SearchInput } from "@/components/SearchInput";
 import { FilterSection } from "@/components/FilterSection";
 import { ModelCard } from "@/components/ModelCard";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Download, Heart, MessageSquare, BookmarkCheck, Calendar } from "lucide-react";
 import { fetchModels } from "@/services/api";
 import { Header } from "@/components/Header";
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 interface Tag {
   absolute_url?: string;
@@ -36,6 +37,7 @@ interface Model {
   creator_thumbnail: string;
   price: string;
   description: string;
+  repo: string;
 }
 
 const Index = () => {
@@ -44,6 +46,7 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
   const observerTarget = useRef<HTMLDivElement>(null);
+  const PAGE_SIZE = 20;
 
   const {
     data,
@@ -56,7 +59,7 @@ const Index = () => {
     queryKey: ['models', searchQuery, selectedCategory],
     queryFn: ({ pageParam = 1 }) => fetchModels(searchQuery, { category: selectedCategory }, pageParam),
     getNextPageParam: (lastPage, allPages) => {
-      return lastPage.length === 20 ? allPages.length + 1 : undefined;
+      return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
     },
     enabled: searchQuery.length > 0,
     initialPageParam: 1,
@@ -87,7 +90,7 @@ const Index = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(onIntersect, {
       root: null,
-      rootMargin: "0px",
+      rootMargin: "100px",
       threshold: 1.0,
     });
 
@@ -212,9 +215,14 @@ const Index = () => {
         )}
 
         <Dialog open={!!selectedModel} onOpenChange={() => setSelectedModel(null)}>
-          <DialogContent className="max-w-4xl">
-            {selectedModel && (
+          <DialogContent className="max-w-4xl" >
+            {
+              
+            selectedModel && (
               <div className="space-y-6">
+                <DialogTitle>
+                <VisuallyHidden>{selectedModel.name} Details</VisuallyHidden>
+                </DialogTitle>
                 <div className="aspect-video overflow-hidden rounded-lg">
                   <img
                     src={selectedModel.thumbnail}

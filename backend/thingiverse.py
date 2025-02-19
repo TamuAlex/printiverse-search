@@ -1,51 +1,62 @@
-from dataclasses import dataclass
-import json
+from curl_cffi import requests
 
-@dataclass
-class ThingiverseModel():
-    def __init__(self, id, name, thumbnail, public_url, creator_name, creator_url, f_added, like_count, collect_count, comment_count, is_nsfw, tags, creator_thumbnail):
-        self.id = id
-        self.name = name
-        self.thumbnail = thumbnail
-        self.public_url = public_url
-        self.creator_name = creator_name
-        self.creator_url = creator_url
-        self.f_added = f_added
-        self.like_count = like_count
-        self.collect_count = collect_count
-        self.comment_count = comment_count
-        self.is_nsfw = is_nsfw
-        self.tags = tags
-        self.creator_thumbnail = creator_thumbnail
-        self.price = "free"
-        self.description = self.generate_description_from_tags(tags)
 
+def get_models_thingiverse(search_query, parameters={}, key_thingiverse=""):
+    list_models = []
+    headers = {"Authorization": f"Bearer {key_thingiverse}", "media-type": "application/json"}
     
-    def generate_description_from_tags(self, tags):
-        description = ""
-
-        for tag in tags:
-            description = description + str(tag["name"]) + " - "
-
-        return description[:-2]
+    url_api = "https://api.thingiverse.com/search/" + search_query
+    parameters = format_parameters_thingiverse(parameters)
     
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "thumbnail": self.thumbnail,
-            "public_url": self.public_url,
-            "creator_name": self.creator_name,
-            "creator_url": self.creator_url,
-            "f_added": self.f_added,
-            "like_count": self.like_count,
-            "collect_count": self.collect_count,
-            "comment_count": self.comment_count,
-            "is_nsfw": self.is_nsfw,
-            #"tags": " - ".join([tag.name for tag in self.tags]),
-            "tags": json.loads(self.tags),
-            "creator_thumbnail": self.creator_thumbnail,
-            "price": self.price,
-            "description": self.description
-        }
+    try:
+        response = requests.get(url_api, impersonate="chrome", headers=headers, params=parameters)
+        json_respuesta = response.json()
+        
+        for hit in json_respuesta["hits"]:
+            # Process tags to ensure they're in the correct format
+            tags = []
+            if hit["tags"]:
+                for tag in hit["tags"]:
+                    if isinstance(tag, dict):
+                        tags.append(tag)
+                    else:
+                        tags.append({"name": str(tag)})
+
+            model = {
+                "id": hit["id"],
+                "name": hit["name"],
+                "thumbnail": hit["preview_image"],
+                "public_url": hit["public_url"],
+                "creator_name": hit["creator"]["name"],
+                "creator_url": hit["creator"]["public_url"],
+                "f_added": hit["created_at"],
+                "like_count": hit["like_count"],
+                "collect_count": hit["collect_count"],
+                "comment_count": hit["comment_count"],
+                "is_nsfw": hit["is_nsfw"],
+                "tags": tags,  # Using processed tags
+                "creator_thumbnail": hit["creator"]["thumbnail"],
+                "price": "free",
+                "description": hit.get("description", ""),
+                "repo": "Thingiverse"
+            }
+            list_models.append(model)
+        
+        return list_models
+    except Exception as e:
+        print(f"Error in get_models_thingiverse: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return []
+    
+
+
+def format_parameters_thingiverse(parameters):
+    if "sort" not in parameters:
+        parameters["sort"] = "popular"
+    
+    parameters["type"] = "things"
+    parameters["per_page"] = "50"
+    #parameters["page"] = 1
+    return parameters
 
