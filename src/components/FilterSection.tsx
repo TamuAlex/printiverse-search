@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, Database } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -45,6 +45,13 @@ export const FilterSection = ({
   onCategoryChange,
   onReposChange,
 }: FilterSectionProps) => {
+  // Initialize selectedRepos with all repository IDs if it's empty
+  useEffect(() => {
+    if (selectedRepos.length === 0) {
+      onReposChange(repositories.map(repo => repo.id));
+    }
+  }, []);
+
   return (
     <div className="flex flex-col md:flex-row gap-4 justify-center items-center py-6">
       <div className="flex flex-wrap gap-2 justify-center">
@@ -64,11 +71,11 @@ export const FilterSection = ({
         ))}
       </div>
 
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="flex items-center gap-2">
             <Database className="w-4 h-4" />
-            Repositories ({selectedRepos.length === 0 ? "All" : selectedRepos.length})
+            Repositories ({selectedRepos.length})
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">
