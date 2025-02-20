@@ -93,80 +93,83 @@ export const FilterSection = ({
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-72" align="start">
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-lg font-semibold">Sort By</DropdownMenuLabel>
-          <DropdownMenuRadioGroup value={sortBy} onValueChange={onSortChange}>
-            {sortOptions.map((option) => (
-              <DropdownMenuRadioItem 
-                key={option.value} 
-                value={option.value}
-                className="flex items-center gap-2 py-2"
-              >
-                <span>{option.icon}</span>
-                {option.label}
-              </DropdownMenuRadioItem>
-            ))}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
+      <DropdownMenuContent className="w-[800px] p-4" align="start">
+        <div className="grid grid-cols-4 gap-4">
+          {/* Sort By Section */}
+          <div className="space-y-2">
+            <DropdownMenuLabel className="text-lg font-semibold">Sort By</DropdownMenuLabel>
+            <DropdownMenuRadioGroup value={sortBy} onValueChange={onSortChange}>
+              <div className="space-y-1">
+                {sortOptions.map((option) => (
+                  <DropdownMenuRadioItem 
+                    key={option.value} 
+                    value={option.value}
+                    className="flex items-center gap-2 py-2"
+                  >
+                    <span>{option.icon}</span>
+                    {option.label}
+                  </DropdownMenuRadioItem>
+                ))}
+              </div>
+            </DropdownMenuRadioGroup>
+          </div>
 
-        <DropdownMenuSeparator />
+          {/* Categories Section */}
+          <div className="space-y-2 col-span-2">
+            <DropdownMenuLabel className="text-lg font-semibold">Categories</DropdownMenuLabel>
+            <DropdownMenuRadioGroup value={selectedCategory} onValueChange={onCategoryChange}>
+              <div className="grid grid-cols-2 gap-1">
+                {categories.map((category) => (
+                  <DropdownMenuRadioItem 
+                    key={category.id} 
+                    value={category.id}
+                    className="flex items-center gap-2 py-2"
+                  >
+                    <span>{category.icon}</span>
+                    {category.label}
+                  </DropdownMenuRadioItem>
+                ))}
+              </div>
+            </DropdownMenuRadioGroup>
+          </div>
 
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-lg font-semibold">Categories</DropdownMenuLabel>
-          <DropdownMenuRadioGroup value={selectedCategory} onValueChange={onCategoryChange}>
-            <div className="grid grid-cols-1 gap-1">
-              {categories.map((category) => (
-                <DropdownMenuRadioItem 
-                  key={category.id} 
-                  value={category.id}
-                  className="flex items-center gap-2 py-2"
-                >
-                  <span>{category.icon}</span>
-                  {category.label}
-                </DropdownMenuRadioItem>
-              ))}
+          {/* Repositories and NSFW Section */}
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <DropdownMenuLabel className="text-lg font-semibold">Repositories</DropdownMenuLabel>
+              <div className="space-y-1">
+                {repositories.map((repo) => (
+                  <DropdownMenuCheckboxItem
+                    key={repo.id}
+                    checked={selectedRepos.includes(repo.id)}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        onReposChange([...selectedRepos, repo.id]);
+                      } else {
+                        onReposChange(selectedRepos.filter((r) => r !== repo.id));
+                      }
+                    }}
+                    className="flex items-center gap-2 py-2"
+                  >
+                    {repo.icon}
+                    {repo.name}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </div>
             </div>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
 
-        <DropdownMenuSeparator />
-
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-lg font-semibold">Repositories</DropdownMenuLabel>
-          {repositories.map((repo) => (
-            <DropdownMenuCheckboxItem
-              key={repo.id}
-              checked={selectedRepos.includes(repo.id)}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  onReposChange([...selectedRepos, repo.id]);
-                } else {
-                  onReposChange(selectedRepos.filter((r) => r !== repo.id));
-                }
-              }}
-              className="flex items-center gap-2 py-2"
-            >
-              {repo.icon}
-              {repo.name}
-            </DropdownMenuCheckboxItem>
-          ))}
-        </DropdownMenuGroup>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuGroup>
-          <div className="px-2 py-3">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="nsfw-mode" className="font-semibold">Show NSFW Content</Label>
-              <Switch
-                id="nsfw-mode"
-                checked={nsfwEnabled}
-                onCheckedChange={onNsfwChange}
-              />
+            <div className="pt-4 border-t">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="nsfw-mode" className="font-semibold">Show NSFW Content</Label>
+                <Switch
+                  id="nsfw-mode"
+                  checked={nsfwEnabled}
+                  onCheckedChange={onNsfwChange}
+                />
+              </div>
             </div>
           </div>
-        </DropdownMenuGroup>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
