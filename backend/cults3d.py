@@ -7,11 +7,11 @@ def get_models_cults(search_query, parameters={}, key_cults="", username_cults="
     """
     url = "https://cults3d.com/graphql"
     parameters = format_parameters_cults(parameters)
-    
+    print(F"cults params: {parameters}")
     # Define the GraphQL query
     query = f"""
     {{
-      creationsSearchBatch(query:"{search_query}", limit: {parameters["limit"]}, sort: {parameters["sort"]}) {{
+      creationsSearchBatch(query:"{search_query}", limit: {parameters["limit"]}, sort: {parameters["sort"]}, onlyName:true) {{
         total
         results {{
           identifier
@@ -56,10 +56,14 @@ def get_models_cults(search_query, parameters={}, key_cults="", username_cults="
     if "errors" in data:
         raise Exception(f"GraphQL errors: {data['errors']}")
     
+    
     results = data["data"]["creationsSearchBatch"]["results"]
     list_models = []
+    print(results)
+    print(len(results))
     
     for hit in results:
+        
         # Extract the thumbnail image from illustrations
         thumbnail = hit["illustrations"][0]["imageUrl"] if hit["illustrations"] else ""
         
@@ -93,15 +97,13 @@ def get_models_cults(search_query, parameters={}, key_cults="", username_cults="
             "creator_thumbnail": "",  # This field isn't available in the GraphQL response
             "price": price,
             "description": hit.get("description", ""),
-            "repo": "Cults3D",
+            "repo": "Cults3d",
             "comments": comments  # Adding comments as an extra field
         }
         list_models.append(model)
-        return list_models
-    
-    return {
         
-    }
+    
+    return list_models
     
 
 
@@ -110,7 +112,7 @@ def format_parameters_cults(parameters):
         parameters["sort"] = "BY_LIKES"
     
     
-    parameters["limit"] = "50"
+    parameters["limit"] = "2"
     #parameters["page"] = 1
     return parameters
 

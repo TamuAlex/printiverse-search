@@ -46,8 +46,8 @@ def get_models():
     # If no repositories specified or 'cults3d' is in the list, get Cults3D models
     # Note: Implement get_models_cults3d when available
     if not repositories or 'cults3d' in repositories:
-        #cults3d_models = get_models_cults(search_query, filters)
-        #all_models.extend(cults3d_models)
+        cults3d_models = get_models_cults(search_query, filters, key_cults="CVozXXLJaDy5nN3eUttDcytnB", username_cults="tamulocoormar")
+        all_models.extend(cults3d_models)
         pass
     
 

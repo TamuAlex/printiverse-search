@@ -6,8 +6,9 @@ def get_models_thingiverse(search_query, parameters={}, key_thingiverse=""):
     headers = {"Authorization": f"Bearer {key_thingiverse}", "media-type": "application/json"}
     
     url_api = "https://api.thingiverse.com/search/" + search_query
+    print(f"TV parameters: {parameters}")
     parameters = format_parameters_thingiverse(parameters)
-    
+    print(f"formatted TV parameter: {parameters}")
     try:
         response = requests.get(url_api, impersonate="chrome", headers=headers, params=parameters)
         json_respuesta = response.json()
@@ -59,21 +60,24 @@ def format_parameters_thingiverse(parameters):
         "downloads": "relevant"
     }
 
-    filter_dict = {
-        "toys": "72",
+    category_dict = {
+        "Toys": "72",
         "Home": "67",
         "Gadgets": "65",
         "Art": "63",
         "Tools":"71",
     }
     
-    if "sort" not in parameters:
-        parameters_thingiverse["sort"] = "popular"
-    else:
-        parameters_thingiverse["sort"] = sort_dict[parameters["sort"]]
     
-    if "filter" in parameters:
-        parameters_thingiverse["category_id"] = filter_dict[parameters["filter"]]
+    parameters_thingiverse["sort"] = sort_dict[parameters["sortBy"]]
+
+    if parameters["category"] != "All":
+        parameters_thingiverse["category_id"] = category_dict[parameters["category"]]
+
+    
+
+
+        
     
     parameters_thingiverse["type"] = "things"
     parameters_thingiverse["per_page"] = "50"
