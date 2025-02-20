@@ -52,11 +52,31 @@ def get_models_thingiverse(search_query, parameters={}, key_thingiverse=""):
 
 
 def format_parameters_thingiverse(parameters):
-    if "sort" not in parameters:
-        parameters["sort"] = "popular"
+    parameters_thingiverse = {}
+    sort_dict = {
+        "likes": "popular",
+        "date": "newest",
+        "downloads": "relevant"
+    }
+
+    filter_dict = {
+        "toys": "72",
+        "Home": "67",
+        "Gadgets": "65",
+        "Art": "63",
+        "Tools":"71",
+    }
     
-    parameters["type"] = "things"
-    parameters["per_page"] = "50"
+    if "sort" not in parameters:
+        parameters_thingiverse["sort"] = "popular"
+    else:
+        parameters_thingiverse["sort"] = sort_dict[parameters["sort"]]
+    
+    if "filter" in parameters:
+        parameters_thingiverse["category_id"] = filter_dict[parameters["filter"]]
+    
+    parameters_thingiverse["type"] = "things"
+    parameters_thingiverse["per_page"] = "50"
     #parameters["page"] = 1
-    return parameters
+    return parameters_thingiverse
 
