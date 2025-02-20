@@ -94,7 +94,7 @@ export const FilterSection = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[800px] p-4" align="start">
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4 divide-x divide-border">
           {/* Sort By Section */}
           <div className="space-y-2">
             <DropdownMenuLabel className="text-lg font-semibold">Sort By</DropdownMenuLabel>
@@ -115,7 +115,7 @@ export const FilterSection = ({
           </div>
 
           {/* Categories Section */}
-          <div className="space-y-2 col-span-2">
+          <div className="space-y-2 col-span-2 pl-4">
             <DropdownMenuLabel className="text-lg font-semibold">Categories</DropdownMenuLabel>
             <DropdownMenuRadioGroup value={selectedCategory} onValueChange={onCategoryChange}>
               <div className="grid grid-cols-2 gap-1">
@@ -134,7 +134,7 @@ export const FilterSection = ({
           </div>
 
           {/* Repositories and NSFW Section */}
-          <div className="space-y-4">
+          <div className="space-y-4 pl-4">
             <div className="space-y-2">
               <DropdownMenuLabel className="text-lg font-semibold">Repositories</DropdownMenuLabel>
               <div className="space-y-1">
