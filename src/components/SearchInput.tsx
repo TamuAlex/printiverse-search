@@ -4,12 +4,31 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { debounce } from "lodash";
+import { FilterSection } from "./FilterSection";
 
 interface SearchInputProps {
   onSearch: (query: string) => void;
+  selectedCategory: string;
+  selectedRepos: string[];
+  onCategoryChange: (category: string) => void;
+  onReposChange: (repos: string[]) => void;
+  sortBy?: string;
+  onSortChange?: (sort: string) => void;
+  nsfwEnabled?: boolean;
+  onNsfwChange?: (enabled: boolean) => void;
 }
 
-export const SearchInput = ({ onSearch }: SearchInputProps) => {
+export const SearchInput = ({ 
+  onSearch,
+  selectedCategory,
+  selectedRepos,
+  onCategoryChange,
+  onReposChange,
+  sortBy,
+  onSortChange,
+  nsfwEnabled,
+  onNsfwChange,
+}: SearchInputProps) => {
   const [query, setQuery] = useState("");
 
   const handleSearch = () => {
@@ -29,24 +48,36 @@ export const SearchInput = ({ onSearch }: SearchInputProps) => {
   };
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto flex gap-2">
-      <div className="relative flex-1">
-        <Input
-          type="text"
-          placeholder="Search for 3D models..."
-          value={query}
-          onChange={handleChange}
-          onKeyPress={handleKeyPress}
-          className="w-full pl-12 h-14 text-lg bg-white/80 dark:bg-black/80 backdrop-blur-lg border border-gray-200 dark:border-gray-800 rounded-2xl shadow-lg focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-700 transition-all duration-300"
+    <div className="relative w-full max-w-2xl mx-auto space-y-4">
+      <div className="flex gap-2">
+        <FilterSection
+          selectedCategory={selectedCategory}
+          selectedRepos={selectedRepos}
+          onCategoryChange={onCategoryChange}
+          onReposChange={onReposChange}
+          sortBy={sortBy}
+          onSortChange={onSortChange}
+          nsfwEnabled={nsfwEnabled}
+          onNsfwChange={onNsfwChange}
         />
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <div className="relative flex-1">
+          <Input
+            type="text"
+            placeholder="Search for 3D models..."
+            value={query}
+            onChange={handleChange}
+            onKeyPress={handleKeyPress}
+            className="w-full pl-12 h-14 text-lg bg-white/80 dark:bg-black/80 backdrop-blur-lg border border-gray-200 dark:border-gray-800 rounded-2xl shadow-lg focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-700 transition-all duration-300"
+          />
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        </div>
+        <Button 
+          onClick={handleSearch}
+          className="h-14 px-6 text-lg rounded-2xl"
+        >
+          Search
+        </Button>
       </div>
-      <Button 
-        onClick={handleSearch}
-        className="h-14 px-6 text-lg rounded-2xl"
-      >
-        Search
-      </Button>
     </div>
   );
 };
