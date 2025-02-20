@@ -45,6 +45,8 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedRepos, setSelectedRepos] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
+  const [sortBy, setSortBy] = useState("date");
+  const [nsfwEnabled, setNsfwEnabled] = useState(false);
   const observerTarget = useRef<HTMLDivElement>(null);
   const PAGE_SIZE = 20;
 
@@ -62,7 +64,9 @@ const Index = () => {
       { 
         category: selectedCategory, 
         repositories: selectedRepos.length > 0 ? selectedRepos : undefined,
-        page: pageParam 
+        page: pageParam,
+        sortBy,
+        nsfwEnabled
       }
     ),
     getNextPageParam: (lastPage, allPages) => {
@@ -127,7 +131,17 @@ const Index = () => {
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {t('home.title')}
           </p>
-          <SearchInput onSearch={handleSearch} />
+          <SearchInput 
+            onSearch={handleSearch}
+            selectedCategory={selectedCategory}
+            selectedRepos={selectedRepos}
+            onCategoryChange={setSelectedCategory}
+            onReposChange={setSelectedRepos}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            nsfwEnabled={nsfwEnabled}
+            onNsfwChange={setNsfwEnabled}
+          />
         </div>
 
         <FilterSection

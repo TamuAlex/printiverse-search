@@ -4,12 +4,31 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { debounce } from "lodash";
+import { FilterSection } from "./FilterSection";
 
 interface SearchInputProps {
   onSearch: (query: string) => void;
+  selectedCategory: string;
+  selectedRepos: string[];
+  onCategoryChange: (category: string) => void;
+  onReposChange: (repos: string[]) => void;
+  sortBy?: string;
+  onSortChange?: (sort: string) => void;
+  nsfwEnabled?: boolean;
+  onNsfwChange?: (enabled: boolean) => void;
 }
 
-export const SearchInput = ({ onSearch }: SearchInputProps) => {
+export const SearchInput = ({ 
+  onSearch,
+  selectedCategory,
+  selectedRepos,
+  onCategoryChange,
+  onReposChange,
+  sortBy,
+  onSortChange,
+  nsfwEnabled,
+  onNsfwChange,
+}: SearchInputProps) => {
   const [query, setQuery] = useState("");
 
   const handleSearch = () => {
@@ -41,6 +60,16 @@ export const SearchInput = ({ onSearch }: SearchInputProps) => {
         />
         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
       </div>
+      <FilterSection
+        selectedCategory={selectedCategory}
+        selectedRepos={selectedRepos}
+        onCategoryChange={onCategoryChange}
+        onReposChange={onReposChange}
+        sortBy={sortBy}
+        onSortChange={onSortChange}
+        nsfwEnabled={nsfwEnabled}
+        onNsfwChange={onNsfwChange}
+      />
       <Button 
         onClick={handleSearch}
         className="h-14 px-6 text-lg rounded-2xl"

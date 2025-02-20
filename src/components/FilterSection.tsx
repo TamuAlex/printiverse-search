@@ -1,26 +1,30 @@
+
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useState, useEffect } from "react";
-import { Check, Database } from "lucide-react";
-import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "./ui/button";
+import { Filter, Database } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface FilterSectionProps {
   selectedCategory: string;
   selectedRepos: string[];
   onCategoryChange: (category: string) => void;
   onReposChange: (repos: string[]) => void;
+  sortBy?: string;
+  onSortChange?: (sort: string) => void;
+  nsfwEnabled?: boolean;
+  onNsfwChange?: (enabled: boolean) => void;
 }
 
 const categories = [
@@ -62,62 +66,93 @@ const repositories = [
   },
 ];
 
+const sortOptions = [
+  { value: "likes", label: "Most Liked" },
+  { value: "downloads", label: "Most Downloaded" },
+  { value: "date", label: "Most Recent" },
+];
+
 export const FilterSection = ({
   selectedCategory,
   selectedRepos,
   onCategoryChange,
   onReposChange,
+  sortBy = "date",
+  onSortChange = () => {},
+  nsfwEnabled = false,
+  onNsfwChange = () => {},
 }: FilterSectionProps) => {
-  useEffect(() => {
-    if (selectedRepos.length === 0) {
-      onReposChange(repositories.map(repo => repo.id));
-    }
-  }, []);
-
   return (
-    <div className="flex flex-col md:flex-row gap-4 justify-center items-center py-6">
-      <div className="flex flex-wrap gap-2 justify-center">
-        {categories.map((category) => (
-          <Badge
-            key={category}
-            variant={selectedCategory === category ? "default" : "secondary"}
-            className={`px-4 py-2 cursor-pointer transition-all duration-200 ${
-              selectedCategory === category
-                ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-            onClick={() => onCategoryChange(category)}
-          >
-            {category}
-          </Badge>
-        ))}
-      </div>
-
+    <div className="flex flex-col space-y-4">
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="flex items-center gap-2">
-            <Database className="w-4 h-4" />
-            Repositories ({selectedRepos.length})
+            <Filter className="w-4 h-4" />
+            Filters
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-48">
-          {repositories.map((repo) => (
-            <DropdownMenuCheckboxItem
-              key={repo.id}
-              checked={selectedRepos.includes(repo.id)}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  onReposChange([...selectedRepos, repo.id]);
-                } else {
-                  onReposChange(selectedRepos.filter((r) => r !== repo.id));
-                }
-              }}
-              className="text-gray-900 dark:text-gray-100 font-medium"
-            >
-              {repo.icon}
-              {repo.name}
-            </DropdownMenuCheckboxItem>
-          ))}
+        <DropdownMenuContent className="w-64" align="start">
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Sort By</DropdownMenuLabel>
+            <DropdownMenuRadioGroup value={sortBy} onValueChange={onSortChange}>
+              {sortOptions.map((option) => (
+                <DropdownMenuRadioItem key={option.value} value={option.value}>
+                  {option.label}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuGroup>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Categories</DropdownMenuLabel>
+            <DropdownMenuRadioGroup value={selectedCategory} onValueChange={onCategoryChange}>
+              {categories.map((category) => (
+                <DropdownMenuRadioItem key={category} value={category}>
+                  {category}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuGroup>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Repositories</DropdownMenuLabel>
+            {repositories.map((repo) => (
+              <DropdownMenuCheckboxItem
+                key={repo.id}
+                checked={selectedRepos.includes(repo.id)}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    onReposChange([...selectedRepos, repo.id]);
+                  } else {
+                    onReposChange(selectedRepos.filter((r) => r !== repo.id));
+                  }
+                }}
+                className="text-gray-900 dark:text-gray-100 font-medium"
+              >
+                {repo.icon}
+                {repo.name}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuGroup>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuGroup>
+            <div className="px-2 py-2">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="nsfw-mode"
+                  checked={nsfwEnabled}
+                  onCheckedChange={onNsfwChange}
+                />
+                <Label htmlFor="nsfw-mode">Show NSFW Content</Label>
+              </div>
+            </div>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
