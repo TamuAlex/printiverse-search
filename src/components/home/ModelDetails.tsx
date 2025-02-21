@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Download, Heart, MessageSquare, BookmarkCheck, Calendar } from "lucide-react";
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { createSlug } from "@/lib/utils";
 
 interface Tag {
   absolute_url?: string;
@@ -48,10 +49,36 @@ export const ModelDetails = ({ model, onClose }: ModelDetailsProps) => {
 
   if (!model) return null;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "3DModel",
+    "name": model.name,
+    "description": model.description,
+    "image": model.thumbnail,
+    "creator": {
+      "@type": "Person",
+      "name": model.creator_name,
+      "url": model.creator_url
+    },
+    "dateCreated": model.f_added,
+    "url": model.public_url,
+    "category": model.tags?.map(tag => typeof tag === 'string' ? tag : tag.name).join(", "),
+    "fileFormat": "3D",
+    "identifier": model.id,
+    "offers": {
+      "@type": "Offer",
+      "price": model.price === "free" ? "0" : model.price.replace(/[^0-9.]/g, ''),
+      "priceCurrency": model.price === "free" ? "USD" : model.price.substring(0, 1) === "$" ? "USD" : "EUR"
+    }
+  };
+
   return (
     <Dialog open={!!model} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl">
         <div className="space-y-6">
+          <script type="application/ld+json">
+            {JSON.stringify(jsonLd)}
+          </script>
           <DialogTitle>
             <VisuallyHidden>{model.name} Details</VisuallyHidden>
           </DialogTitle>
