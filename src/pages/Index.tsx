@@ -1,4 +1,3 @@
-
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -8,6 +7,7 @@ import { HeroSection } from "@/components/home/HeroSection";
 import { ModelGrid } from "@/components/home/ModelGrid";
 import { ModelDetails } from "@/components/home/ModelDetails";
 import { LoadingState } from "@/components/home/LoadingState";
+import { SEO } from "@/components/SEO";
 
 interface Model {
   id: number;
@@ -101,6 +101,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <SEO 
+        title={t('home.title')}
+        description={t('home.description')}
+        image="/og-image.png"
+      />
       <Header />
       <div className="container px-4 py-8 mx-auto">
         <HeroSection 

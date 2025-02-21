@@ -1,7 +1,7 @@
-
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Download, Eye, Heart, BookmarkCheck } from "lucide-react";
+import { LazyImage } from "./LazyImage";
 
 interface ModelCardProps {
   title: string;
@@ -39,18 +39,16 @@ export const ModelCard = ({
   repo,
   onClick,
 }: ModelCardProps) => {
-  console.log(repo)
   return (
     <Card 
       className="overflow-hidden group transition-all duration-300 hover:shadow-xl bg-white/80 dark:bg-black/80 backdrop-blur-sm border border-gray-200 dark:border-gray-800 cursor-pointer"
       onClick={onClick}
     >
       <div className="aspect-square overflow-hidden">
-        <img
+        <LazyImage
           src={imageUrl}
           alt={title}
           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-          loading="lazy"
         />
       </div>
       <div className="p-4 space-y-3">
