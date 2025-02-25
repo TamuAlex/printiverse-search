@@ -1,4 +1,3 @@
-
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -33,10 +32,10 @@ const Index = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedRepos, setSelectedRepos] = useState<string[]>(["thingiverse", "cults3d"]); // All repositories selected by default
+  const [selectedRepos, setSelectedRepos] = useState<string[]>(["thingiverse", "cults3d", "myminifactory"]);
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
-  const [sortBy, setSortBy] = useState("likes"); // Most Liked by default
-  const [nsfwEnabled, setNsfwEnabled] = useState(false); // NSFW disabled by default
+  const [sortBy, setSortBy] = useState("likes");
+  const [nsfwEnabled, setNsfwEnabled] = useState(false);
   const observerTarget = useRef<HTMLDivElement>(null);
   const PAGE_SIZE = 20;
 
