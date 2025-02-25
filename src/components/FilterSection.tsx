@@ -42,39 +42,33 @@ const repositories = [
     id: "thingiverse", 
     name: "Thingiverse",
     icon: (
-      <svg 
-        viewBox="0 0 24 24" 
-        className="w-4 h-4 inline-block mr-2 text-[#248BFB]" 
-        fill="currentColor"
-      >
-        <path d="M11.955.005C5.425-.137 0 5.236 0 11.779c0 6.542 5.375 11.914 11.955 11.914S23.91 18.321 23.91 11.779C23.91 5.236 18.485-.137 11.955.005zm4.399 5.879a.928.928 0 0 1 .923.923.928.928 0 0 1-.923.923.928.928 0 0 1-.923-.923.928.928 0 0 1 .923-.923zm-4.399.225c3.167 0 5.67 2.503 5.67 5.67s-2.503 5.67-5.67 5.67-5.67-2.503-5.67-5.67 2.503-5.67 5.67-5.67zm0 2.228c-1.9 0-3.442 1.542-3.442 3.442s1.542 3.442 3.442 3.442 3.442-1.542 3.442-3.442-1.542-3.442-3.442-3.442z"/>
-      </svg>
+      <img 
+        src="https://cdn.thingiverse.com/site/assets/images/favicons/favicon-32x32.png" 
+        alt="Thingiverse"
+        className="w-4 h-4 inline-block mr-2"
+      />
     ),
   },
   { 
     id: "cults3d", 
     name: "Cults3D",
     icon: (
-      <svg 
-        viewBox="0 0 24 24" 
-        className="w-4 h-4 inline-block mr-2 text-[#822ef5]" 
-        fill="currentColor"
-      >
-        <path d="M12 0C5.375 0 0 5.375 0 12s5.375 12 12 12 12-5.375 12-12S18.625 0 12 0zm.023 4.125c4.35 0 7.875 3.525 7.875 7.875s-3.525 7.875-7.875 7.875S4.148 16.35 4.148 12s3.525-7.875 7.875-7.875zm0 3.375c-2.475 0-4.5 2.025-4.5 4.5s2.025 4.5 4.5 4.5 4.5-2.025 4.5-4.5-2.025-4.5-4.5-4.5z"/>
-      </svg>
+      <img 
+        src="https://cults3d.com/favicon.ico"
+        alt="Cults3D"
+        className="w-4 h-4 inline-block mr-2"
+      />
     ),
   },
   { 
     id: "myminifactory", 
     name: "MyMiniFactory",
     icon: (
-      <svg 
-        viewBox="0 0 24 24" 
-        className="w-4 h-4 inline-block mr-2 text-[#1c1c1c]" 
-        fill="currentColor"
-      >
-        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 3.6c4.412 0 8.4 3.988 8.4 8.4 0 4.412-3.988 8.4-8.4 8.4-4.412 0-8.4-3.988-8.4-8.4 0-4.412 3.988-8.4 8.4-8.4zm0 2.4c-3.314 0-6 2.686-6 6s2.686 6 6 6 6-2.686 6-6-2.686-6-6-6zm0 2.4c1.985 0 3.6 1.615 3.6 3.6s-1.615 3.6-3.6 3.6-3.6-1.615-3.6-3.6 1.615-3.6 3.6-3.6z"/>
-      </svg>
+      <img 
+        src="https://www.myminifactory.com/favicon.ico"
+        alt="MyMiniFactory"
+        className="w-4 h-4 inline-block mr-2"
+      />
     ),
   },
 ];
