@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import List
 from thingiverse import get_models_thingiverse
 from cults3d import get_models_cults
+from myminifactory import get_models_minifactory
 from flask_cors import CORS
 import json
 
@@ -48,12 +49,23 @@ def get_models():
     if not repositories or 'cults3d' in repositories:
         cults3d_models = get_models_cults(search_query, filters, key_cults="CVozXXLJaDy5nN3eUttDcytnB", username_cults="tamulocoormar")
         all_models.extend(cults3d_models)
-        pass
-    
-
+    get_models_minifactory("benchy", {}, "d88cc946-7634-4f69-9cc5-1e6ff3531a7c")
     print(f"{len(all_models)} models found")
     print("Backend returning models:")
+    all_models = order_models(all_models, filters["sortBy"])
     return jsonify(all_models)
+
+def order_models(models, order):
+    if order == "likes":
+        return sorted(models, key=lambda x: x["like_count"], reverse=True)
+    elif order == "date":
+        return sorted(models, key=lambda x: x["f_added"], reverse=True)
+    elif order == "download":
+        return sorted(models, key=lambda x: x["collect_count"], reverse=True)
+    else:
+        print("Fallo al ordenar")
+        return models
+    
 
 if __name__ == '__main__':
     app.run(debug=True)

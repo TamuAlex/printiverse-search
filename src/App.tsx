@@ -8,11 +8,12 @@ import Index from "./pages/Index";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import "./i18n/config";
+import { CookieConsent } from "@/components/CookieConsent";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
+  <><QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -24,7 +25,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
-  </QueryClientProvider>
+  </QueryClientProvider><CookieConsent /></>
 );
 
 export default App;

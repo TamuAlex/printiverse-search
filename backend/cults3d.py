@@ -9,37 +9,70 @@ def get_models_cults(search_query, parameters={}, key_cults="", username_cults="
     parameters = format_parameters_cults(parameters)
     print(F"cults params: {parameters}")
     # Define the GraphQL query
-    query = f"""
-    {{
-      creationsSearchBatch(query:"{search_query}", limit: {parameters["limit"]}, sort: {parameters["sort"]}, onlyName:true) {{
-        total
-        results {{
-          identifier
-          shortUrl
-          illustrations {{
-            imageUrl
-          }}
-          updatedAt
-          name(locale: EN)
-          url(locale: EN)
-          price(currency: EUR) {{
-            cents
-          }}
-          creator {{
-            nick
+    if parameters["category_id"] == "All":
+      query = f"""
+      {{
+        creationsSearchBatch(query:"{search_query}", limit: {parameters["limit"]}, sort: {parameters["sort"]}, onlyName:true) {{
+          total
+          results {{
+            identifier
             shortUrl
+            illustrations {{
+              imageUrl
+            }}
+            updatedAt
+            name(locale: EN)
+            url(locale: EN)
+            price(currency: EUR) {{
+              cents
+            }}
+            creator {{
+              nick
+              shortUrl
+            }}
+            likesCount
+            usages
+            description
+            comments {{
+              text
+            }}
+            tags
           }}
-          likesCount
-          usages
-          description
-          comments {{
-            text
-          }}
-          tags
         }}
       }}
-    }}
-    """
+      """
+    else:
+       query = f"""
+      {{
+        creationsSearchBatch(query:"{search_query}", limit: {parameters["limit"]}, sort: {parameters["sort"]}, onlyName:true, categoryIds:[{parameters['category_id']}]) {{
+          total
+          results {{
+            identifier
+            shortUrl
+            illustrations {{
+              imageUrl
+            }}
+            updatedAt
+            name(locale: EN)
+            url(locale: EN)
+            price(currency: EUR) {{
+              cents
+            }}
+            creator {{
+              nick
+              shortUrl
+            }}
+            likesCount
+            usages
+            description
+            comments {{
+              text
+            }}
+            tags
+          }}
+        }}
+      }}
+      """
     
     # Make the GraphQL request
     response = requests.post(
@@ -59,8 +92,6 @@ def get_models_cults(search_query, parameters={}, key_cults="", username_cults="
     
     results = data["data"]["creationsSearchBatch"]["results"]
     list_models = []
-    print(results)
-    print(len(results))
     
     for hit in results:
         
@@ -108,11 +139,30 @@ def get_models_cults(search_query, parameters={}, key_cults="", username_cults="
 
 
 def format_parameters_cults(parameters):
-    if "sort" not in parameters:
-        parameters["sort"] = "BY_LIKES"
+    parameters_cults = {}
+    sort_dict = {
+        "likes": "BY_LIKES",
+        "date": "BY_PUBLICATION",
+        "downloads": "BY_DOWNLOADS"
+    }
+
+    category_dict = {
+        "Toys": "Q2F0ZWdvcnkvMzE",
+        "Home": "Q2F0ZWdvcnkvMzA",
+        "Gadgets": "Q2F0ZWdvcnkvMjU",
+        "Art": "Q2F0ZWdvcnkvMjM",
+        "Tools":"Q2F0ZWdvcnkvMjc",
+    }
     
     
-    parameters["limit"] = "2"
-    #parameters["page"] = 1
-    return parameters
+    parameters_cults["sort"] = sort_dict[parameters["sortBy"]]
+
+    if parameters["category"] != "All":
+        parameters_cults["category_id"] = category_dict[parameters["category"]]
+    else:
+       parameters_cults["category_id"] = "All"
+
+    parameters_cults["limit"] = "50"
+    return parameters_cults
+
 
