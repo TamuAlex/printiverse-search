@@ -10,9 +10,9 @@ export const LoadingState = () => {
         <img 
           src="/lovable-uploads/116a98bf-aa41-4f4d-a935-499572a71573.png" 
           alt="Loading"
-          className="w-full h-full animate-spin"
+          className="w-full h-full"
           style={{ 
-            animation: 'spin 2s linear infinite',
+            animation: 'spin 1.5s linear infinite',
             transformStyle: 'preserve-3d'
           }}
         />
