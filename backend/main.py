@@ -49,7 +49,11 @@ def get_models():
     if not repositories or 'cults3d' in repositories:
         cults3d_models = get_models_cults(search_query, filters, key_cults="CVozXXLJaDy5nN3eUttDcytnB", username_cults="tamulocoormar")
         all_models.extend(cults3d_models)
-    get_models_minifactory("benchy", {}, "d88cc946-7634-4f69-9cc5-1e6ff3531a7c")
+
+    if not repositories or 'myminifactory' in repositories:
+        mmf_models = get_models_minifactory("benchy", filters, "d88cc946-7634-4f69-9cc5-1e6ff3531a7c")
+        all_models.extend(mmf_models)
+    
     print(f"{len(all_models)} models found")
     print("Backend returning models:")
     all_models = order_models(all_models, filters["sortBy"])

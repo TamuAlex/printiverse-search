@@ -5,7 +5,7 @@ def get_models_minifactory(search_query, parameters={}, key=""):
     list_models = []
     
     url_api = "www.myminifactory.com/api/v2/search/"
-    print(f"TV parameters: {parameters}")
+    print(f"mmf parameters: {parameters}")
     parameters = format_parameters_minifactory(parameters, search_query, key)
     try:
         response = requests.get(url_api, impersonate="chrome", params=parameters)
@@ -75,6 +75,7 @@ def get_models_minifactory(search_query, parameters={}, key=""):
 
 
 def format_parameters_minifactory(parameters, search_query, key):
+    print(f"Myminifactory parameters pre: {parameters}")
     sort_dict = {
         "likes": "popularity",
         "date": "date",
