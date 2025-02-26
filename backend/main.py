@@ -28,11 +28,14 @@ def after_request(response):
 
 key_thingiverse = "2f1239af02548dbf83407b8bb7c8042f"
 
-@app.route('/get_models', methods=['POST'])
+@app.route('/get_models', methods=['GET'])
 def get_models():
-    data = request.get_json()
-    search_query = data.get('query', '')
-    filters = data.get('filters', {})
+    search_query = request.args.get('query', '')
+    filters = {}
+    for key, value in request.args.items():
+        if key not in ['query', 'page', 'per_page']:
+            filters[key] = value
+    
     print(f"filters: {filters}")
     
     # Get repositories filter

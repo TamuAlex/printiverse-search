@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Header } from "@/components/Header";
 import { fetchModels } from "@/services/api";
 import { HeroSection } from "@/components/home/HeroSection";
@@ -30,12 +31,16 @@ interface Model {
 
 const Index = () => {
   const { t } = useTranslation();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedRepos, setSelectedRepos] = useState<string[]>(["thingiverse", "cults3d", "myminifactory"]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  
+  const searchQuery = searchParams.get('query') || '';
+  const selectedCategory = searchParams.get('category') || 'All';
+  const selectedRepos = searchParams.get('repositories')?.split(',') || ["thingiverse", "cults3d", "myminifactory"];
+  const sortBy = searchParams.get('sortBy') || 'likes';
+  const nsfwEnabled = searchParams.get('nsfwEnabled') === 'true';
+  
   const [selectedModel, setSelectedModel] = useState<Model | null>(null);
-  const [sortBy, setSortBy] = useState("likes");
-  const [nsfwEnabled, setNsfwEnabled] = useState(false);
   const observerTarget = useRef<HTMLDivElement>(null);
   const PAGE_SIZE = 20;
 
@@ -57,6 +62,7 @@ const Index = () => {
         sortBy,
         nsfwEnabled
       }
+      
     ),
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
@@ -64,20 +70,53 @@ const Index = () => {
     enabled: searchQuery.length > 0,
     initialPageParam: 1,
   });
+  // Función para actualizar los parámetros de URL
+const updateUrlParams = (params: Record<string, any>) => {
+  const newSearchParams = new URLSearchParams(searchParams);
+  
+  // Actualizar o añadir cada parámetro
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '') {
+      newSearchParams.delete(key);
+    } else if (Array.isArray(value)) {
+      newSearchParams.set(key, value.join(','));
+    } else {
+      newSearchParams.set(key, String(value));
+    }
+  });
+  
+  // Actualizar la URL sin recargar la página
+  setSearchParams(newSearchParams);
+};
+const handleSearch = (query: string) => {
+  updateUrlParams({ query: query.toLowerCase(), page: 1 });
+};
+const handleCategoryChange = (category: string) => {
+  updateUrlParams({ category, page: 1 });
+};
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query.toLowerCase());
-  };
+const handleReposChange = (repos: string[]) => {
+  updateUrlParams({ repositories: repos.length > 0 ? repos.join(',') : undefined, page: 1 });
+};
 
-  const onIntersect = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      const [entry] = entries;
-      if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
-    },
-    [fetchNextPage, hasNextPage, isFetchingNextPage]
-  );
+const handleSortChange = (sort: string) => {
+  updateUrlParams({ sortBy: sort, page: 1 });
+};
+
+const handleNsfwChange = (enabled: boolean) => {
+  updateUrlParams({ nsfwEnabled: enabled, page: 1 });
+};
+const onIntersect = useCallback(
+  (entries: IntersectionObserverEntry[]) => {
+    const [entry] = entries;
+    if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+      // Opcionalmente actualizar la página en la URL (no recomendado para scroll infinito)
+      // updateUrlParams({ page: (data?.pages.length || 0) + 1 });
+    }
+  },
+  [fetchNextPage, hasNextPage, isFetchingNextPage]
+);
 
   useEffect(() => {
     const observer = new IntersectionObserver(onIntersect, {
@@ -98,6 +137,12 @@ const Index = () => {
   }, [onIntersect]);
 
   const models = data?.pages.flat() || [];
+  useEffect(() => {
+    if (searchQuery && status !== 'pending' && status !== 'success') {
+      // Forzar la carga inicial si hay una query en la URL
+      // (React Query debería manejar esto automáticamente, pero por si acaso)
+    }
+  }, [searchQuery, status]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -108,17 +153,17 @@ const Index = () => {
       />
       <Header />
       <div className="container px-4 py-8 mx-auto">
-        <HeroSection 
-          onSearch={handleSearch}
-          selectedCategory={selectedCategory}
-          selectedRepos={selectedRepos}
-          onCategoryChange={setSelectedCategory}
-          onReposChange={setSelectedRepos}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
-          nsfwEnabled={nsfwEnabled}
-          onNsfwChange={setNsfwEnabled}
-        />
+      <HeroSection 
+  onSearch={handleSearch}
+  selectedCategory={selectedCategory}
+  selectedRepos={selectedRepos}
+  onCategoryChange={handleCategoryChange}
+  onReposChange={handleReposChange}
+  sortBy={sortBy}
+  onSortChange={handleSortChange}
+  nsfwEnabled={nsfwEnabled}
+  onNsfwChange={handleNsfwChange}
+/>
 
         {!searchQuery && (
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in">

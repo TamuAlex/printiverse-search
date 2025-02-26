@@ -35,16 +35,26 @@ export const fetchModels = async (
   try {
     console.log("Fetching models with query:", searchQuery, "page:", page);
     
-    const response = await fetch('http://localhost:5000/get_models', {
-      method: 'POST',
+    // Construir la URL con los parámetros
+    const url = new URL('http://localhost:5000/get_models');
+    
+    // Añadir query params
+    if (searchQuery) url.searchParams.append('query', searchQuery);
+    url.searchParams.append('page', page.toString());
+    url.searchParams.append('per_page', '20');
+    
+    // Añadir los filtros como parámetros
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        url.searchParams.append(key, value.toString());
+      }
+    });
+    
+    const response = await fetch(url.toString(), {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
         'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        query: searchQuery,
-        filters: { ...filters, page, per_page: 20 },
-      }),
+      }
     });
 
     if (!response.ok) {
