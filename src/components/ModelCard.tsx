@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Download, Eye, Heart, BookmarkCheck } from "lucide-react";
@@ -14,6 +15,7 @@ interface ModelCardProps {
   collectCount?: number;
   repo?: string;
   onClick?: () => void;
+  tags?: Array<{ name: string }>;
 }
 
 const repoConfig = {
@@ -24,6 +26,10 @@ const repoConfig = {
   Cults3d: {
     name: "Cults3D",
     className: "bg-[#822ef5]/10 text-[#822ef5] font-cults font-semibold"
+  },
+  MyMiniFactory: {
+    name: "MyMiniFactory",
+    className: "bg-[#00B0FF]/10 text-[#00B0FF] font-semibold"
   }
 };
 
@@ -38,6 +44,7 @@ export const ModelCard = ({
   collectCount,
   repo,
   onClick,
+  tags = [],
 }: ModelCardProps) => {
   return (
     <Card 
@@ -55,13 +62,13 @@ export const ModelCard = ({
         <h3 className="font-semibold text-lg leading-tight line-clamp-1">{title}</h3>
         <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{description}</p>
         <div className="flex flex-wrap gap-2">
-          {fileFormats.map((format) => (
+          {tags && tags.length > 0 && tags.map((tag, index) => (
             <Badge
-              key={format}
+              key={`${tag.name}-${index}`}
               variant="secondary"
               className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
             >
-              {format}
+              {tag.name}
             </Badge>
           ))}
         </div>

@@ -13,7 +13,7 @@ interface Model {
   collect_count: number;
   comment_count: number;
   is_nsfw: boolean;
-  tags: any[];
+  tags: Array<{ name: string }>;
   creator_thumbnail: string;
   price: string;
   description: string;
@@ -41,6 +41,7 @@ export const ModelGrid = ({ models, onModelClick }: ModelGridProps) => {
           collectCount={model.collect_count}
           repo={model.repo}
           onClick={() => onModelClick(model)}
+          tags={model.tags}
         />
       ))}
     </div>
