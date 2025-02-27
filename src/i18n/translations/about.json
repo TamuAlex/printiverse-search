@@ -1,0 +1,127 @@
+{
+    "aboutUs": {
+      "title": "Sobre Modelarium",
+      "description": "Encuentra los mejores modelos 3D imprimibles de múltiples repositorios en un solo lugar",
+      "headline": "Tu destino único para encontrar los mejores modelos 3D imprimibles en un solo lugar",
+      
+      "mission": {
+        "title": "Nuestra Misión",
+        "content": "En Modelarium, nuestra misión es revolucionar la forma en que las personas encuentran modelos 3D para impresión. En un ecosistema fragmentado con múltiples repositorios, hemos creado una solución centralizada que te permite encontrar exactamente el modelo 3D que necesitas sin perder tiempo navegando por diferentes plataformas."
+      },
+      
+      "whatWeDo": {
+        "title": "¿Qué Hacemos?",
+        "content": "Modelarium es un motor de búsqueda especializado que indexa y centraliza modelos 3D imprimibles de múltiples repositorios. Nuestra plataforma te permite buscar eficientemente a través de diversos ecosistemas para encontrar los modelos 3D que mejor se adapten a tus proyectos de impresión."
+      },
+      
+      "features": {
+        "unified": {
+          "title": "Búsqueda Unificada",
+          "content": "Accede a miles de modelos 3D de diversos repositorios a través de una única interfaz de búsqueda intuitiva."
+        },
+        "filters": {
+          "title": "Filtros Avanzados",
+          "content": "Refina tus búsquedas por categoría, formato (.STL, .OBJ, .3MF), complejidad, tamaño, calificación y más."
+        },
+        "preview": {
+          "title": "Vista Previa 3D",
+          "content": "Examina los modelos antes de descargarlos con nuestro visualizador 3D integrado."
+        }
+      },
+      
+      "modelTypes": {
+        "title": "Tipos de Modelos 3D",
+        "intro": "En Modelarium encontrarás una amplia variedad de modelos 3D imprimibles, incluyendo:",
+        "decoration": {
+          "title": "Decoración para el hogar",
+          "content": "Figuras, jarrones, portavelas y más"
+        },
+        "toys": {
+          "title": "Juguetes y miniaturas",
+          "content": "Personajes, vehículos y accesorios"
+        },
+        "tools": {
+          "title": "Herramientas funcionales",
+          "content": "Soportes, organizadores y soluciones prácticas"
+        },
+        "components": {
+          "title": "Componentes técnicos",
+          "content": "Engranajes, conectores y piezas de repuesto"
+        },
+        "art": {
+          "title": "Arte y esculturas",
+          "content": "Modelos artísticos para impresión 3D"
+        },
+        "prototypes": {
+          "title": "Prototipos",
+          "content": "Modelos para desarrollo de productos"
+        }
+      },
+      
+      "whyChooseUs": {
+        "title": "¿Por Qué Elegir Modelarium?",
+        "intro": "En el mundo de la impresión 3D, encontrar el modelo adecuado puede ser un desafío. Modelarium te ofrece:",
+        "benefits": {
+          "timeSaving": {
+            "title": "Ahorro de tiempo",
+            "content": "Evita navegar por múltiples repositorios con nuestra búsqueda centralizada"
+          },
+          "discovery": {
+            "title": "Descubrimiento optimizado",
+            "content": "Encuentra modelos 3D que de otra manera podrían pasar desapercibidos"
+          },
+          "verification": {
+            "title": "Verificación de imprimibilidad",
+            "content": "Nuestro sistema evalúa la viabilidad de impresión de cada modelo"
+          },
+          "detailedInfo": {
+            "title": "Información detallada",
+            "content": "Accede a especificaciones técnicas, configuraciones recomendadas y opiniones de usuarios"
+          },
+          "models": {
+            "title": "Modelos gratuitos y premium",
+            "content": "Accede tanto a modelos gratuitos como a diseños premium de alta calidad"
+          }
+        }
+      },
+      
+      "team": {
+        "title": "Nuestro Equipo",
+        "content": "Somos un equipo de entusiastas de la impresión 3D, ingenieros y diseñadores unidos por la pasión de hacer que la impresión 3D sea más accesible para todos. Con experiencia en diseño 3D, desarrollo web y tecnologías de impresión, trabajamos incansablemente para que Modelarium sea la herramienta definitiva para encontrar los modelos 3D que necesitas."
+      },
+      
+      "repositories": {
+        "title": "Repositorios Indexados",
+        "intro": "Actualmente, Modelarium indexa modelos 3D de los siguientes repositorios:",
+        "list": {
+          "thingiverse": "Thingiverse",
+          "cults3d": "Cults3D",
+          "myMiniFactory": "MyMiniFactory",
+          "printables": "Printables",
+          "grabCAD": "GrabCAD",
+          "thangs": "Thangs",
+          "cgTrader": "CGTrader",
+          "more": "Y muchos más..."
+        },
+        "outro": "Continuamente ampliamos nuestra cobertura para incluir más repositorios y fuentes de modelos 3D imprimibles."
+      },
+      
+      "formats": {
+        "title": "Formatos Compatibles",
+        "intro": "Modelarium te permite buscar modelos en los formatos más populares para impresión 3D:",
+        "list": {
+          "stl": "STL (STereoLithography)",
+          "obj": "OBJ (Wavefront)",
+          "3mf": "3MF (3D Manufacturing Format)",
+          "amf": "AMF (Additive Manufacturing File Format)",
+          "step": "STEP y otros formatos CAD"
+        }
+      },
+      
+      "cta": {
+        "title": "Únete a la Comunidad Modelarium",
+        "content": "Modelarium está redefiniendo la forma en que los entusiastas, profesionales y aficionados descubren y acceden a modelos 3D para impresión. Estamos comprometidos con la creación de un ecosistema más conectado y accesible para todos los amantes de la impresión 3D.",
+        "button": "Comenzar a Buscar Modelos 3D"
+      }
+    }
+  }
