@@ -30,8 +30,19 @@ export const SearchInput = ({
   onNsfwChange,
 }: SearchInputProps) => {
   const [query, setQuery] = useState("");
+  const [currentFilters, setCurrentFilters] = useState({
+    category: selectedCategory,
+    repos: selectedRepos,
+    sort: sortBy,
+    nsfw: nsfwEnabled
+  });
 
   const handleSearch = () => {
+    // Aplicar todos los filtros cuando se da click en buscar
+    onCategoryChange(currentFilters.category);
+    onReposChange(currentFilters.repos);
+    if (onSortChange) onSortChange(currentFilters.sort || "date");
+    if (onNsfwChange) onNsfwChange(currentFilters.nsfw || false);
     onSearch(query);
   };
 
@@ -51,14 +62,14 @@ export const SearchInput = ({
     <div className="relative w-full max-w-2xl mx-auto space-y-4">
       <div className="flex gap-2">
         <FilterSection
-          selectedCategory={selectedCategory}
-          selectedRepos={selectedRepos}
-          onCategoryChange={onCategoryChange}
-          onReposChange={onReposChange}
-          sortBy={sortBy}
-          onSortChange={onSortChange}
-          nsfwEnabled={nsfwEnabled}
-          onNsfwChange={onNsfwChange}
+          selectedCategory={currentFilters.category}
+          selectedRepos={currentFilters.repos}
+          onCategoryChange={(category) => setCurrentFilters(prev => ({ ...prev, category }))}
+          onReposChange={(repos) => setCurrentFilters(prev => ({ ...prev, repos }))}
+          sortBy={currentFilters.sort}
+          onSortChange={(sort) => setCurrentFilters(prev => ({ ...prev, sort }))}
+          nsfwEnabled={currentFilters.nsfw}
+          onNsfwChange={(nsfw) => setCurrentFilters(prev => ({ ...prev, nsfw }))}
         />
         <div className="relative flex-1">
           <Input
