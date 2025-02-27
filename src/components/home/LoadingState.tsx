@@ -8,7 +8,7 @@ export const LoadingState = () => {
     <div className="flex flex-col items-center justify-center py-12">
       <div className="relative w-24 h-24 mb-4">
         <img 
-          src="/lovable-uploads/116a98bf-aa41-4f4d-a935-499572a71573.png" 
+          src="/lovable-uploads/15fb54d3-75bb-4f90-b169-1531a3c2ab1f.png" 
           alt="Loading"
           className="w-full h-full"
           style={{ 
